@@ -52,6 +52,7 @@ export class PocetnaComponent implements OnInit {
           localStorage.setItem('trenKor', JSON.stringify(kor))
           this.router.navigate(['/ucenik'])
         } else {
+          localStorage.setItem('token', 'admin');
           localStorage.setItem('trenAdm', JSON.stringify(kor))
           this.router.navigate(['/admin'])
         }

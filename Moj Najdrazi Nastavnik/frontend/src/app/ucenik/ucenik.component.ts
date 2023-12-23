@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { KorisnikService } from '../servers/korisnik.service';
+import { Ucenik } from '../models/korisnik';
 
 @Component({
   selector: 'app-ucenik',
@@ -8,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UcenikComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private korser: KorisnikService) { }
 
   ngOnInit(): void {
+    let pageName = 'ucenik'
+    this.korser.checkToken(pageName);
+
+    this.trenUcenik = JSON.parse(localStorage.getItem('trenKor'))
+  }
+
+  trenUcenik: Ucenik;
+
+  logout(){
+    this.korser.logout();
   }
 
 }

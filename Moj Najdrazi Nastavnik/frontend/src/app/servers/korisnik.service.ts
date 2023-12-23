@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PredmetNastavnik } from '../models/predmetNastavnik';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KorisnikService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(username, password) {
     let data = {
@@ -16,6 +17,11 @@ export class KorisnikService {
     }
 
     return this.http.post('http://127.0.0.1:4000/korisnici/login', data)
+  }
+
+  logout(){
+    localStorage.clear();
+    this.router.navigate(['/']);
   }
 
   findByUsername(username) {
@@ -165,9 +171,31 @@ export class KorisnikService {
       predNasSearched = predmetNastavnik;
     }
 
-
-
     return predNasSearched;
+  }
+
+  checkToken(pageName){
+    let token = localStorage.getItem('token');
+    if(token == null){
+      // ako korisnik nije ulogovan
+      this.router.navigate(['/']);
+    
+    } else if( token != pageName){
+      // ucenik moze da pristupi samo stranici ucenika (isto vazi za nastavnika kao i admina)
+      switch(token){
+        case 'admin':
+          this.router.navigate(['/admin']);
+          break;
+        case 'nastavnik':
+          this.router.navigate(['/nastavnik']);
+          break;
+        case 'ucenik':
+          this.router.navigate(['/ucenik']);
+          break;
+        default: break;
+      }
+    }
+
   }
 
 }

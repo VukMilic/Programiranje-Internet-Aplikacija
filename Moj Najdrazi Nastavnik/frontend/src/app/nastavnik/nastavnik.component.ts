@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { KorisnikService } from '../servers/korisnik.service';
+import { Nastavnik } from '../models/korisnik';
 
 @Component({
   selector: 'app-nastavnik',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NastavnikComponent implements OnInit {
 
-  constructor() { }
+  constructor(private korser: KorisnikService) { }
 
   ngOnInit(): void {
+    this.trenNastavnik = JSON.parse(localStorage.getItem('trenKor'))
+    
+    let pageName = 'nastavnik'
+    this.korser.checkToken(pageName);
+  }
+
+  trenNastavnik: Nastavnik;
+
+  logout(){
+    this.korser.logout();
   }
 
 }

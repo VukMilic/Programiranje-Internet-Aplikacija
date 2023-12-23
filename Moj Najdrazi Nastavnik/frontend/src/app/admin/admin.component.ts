@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { KorisnikService } from '../servers/korisnik.service';
+import { Admin } from '../models/korisnik';
 
 @Component({
   selector: 'app-admin',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+  constructor(private korser: KorisnikService) { }
 
   ngOnInit(): void {
+    let pageName = 'admin';
+    this.korser.checkToken(pageName);
+
+    this.trenAdmin = JSON.parse(localStorage.getItem('trenAdm'))
   }
 
+  trenAdmin: Admin
+
+  logout(){
+    this.korser.logout();
+  }
 }

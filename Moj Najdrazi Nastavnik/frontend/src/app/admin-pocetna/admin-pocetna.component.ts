@@ -23,6 +23,7 @@ export class AdminPocetnaComponent implements OnInit {
   login(){
     this.admser.login(this.username, this.password).subscribe((adm: Admin)=>{
       if(adm != null){
+        localStorage.setItem('token', 'admin');
         localStorage.setItem('trenAdm', JSON.stringify(adm))
         this.router.navigate(['/admin'])
       }else{
