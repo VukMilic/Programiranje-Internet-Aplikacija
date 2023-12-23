@@ -1,0 +1,16 @@
+.poruka {
+    color: red;
+}
+
+td {
+    border: 1px solid #333;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+
+table {
+    font-size: large;
+}

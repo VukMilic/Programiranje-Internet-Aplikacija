@@ -1,0 +1,1 @@
+{"version":3,"file":"predmet.js","sourceRoot":"","sources":["../../src/models/predmet.ts"],"names":[],"mappings":";;;;;AAAA,wDAAgC;AAGhC,MAAM,MAAM,GAAG,kBAAQ,CAAC,MAAM,CAAA;AAE9B,IAAI,OAAO,GAAG,IAAI,MAAM,CAAC;IACrB,KAAK,EAAC;QACF,IAAI,EAAE,MAAM;KACf;CACJ,CAAC,CAAA;AAGF,kBAAe,kBAAQ,CAAC,KAAK,CAAC,cAAc,EAAE,OAAO,EAAE,SAAS,CAAC,CAAA"}

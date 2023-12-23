@@ -1,0 +1,1 @@
+{"version":3,"file":"admin.router.js","sourceRoot":"","sources":["../../src/routers/admin.router.ts"],"names":[],"mappings":";;;;;AAAA,sDAA6B;AAC7B,sEAAiE;AAEjE,MAAM,SAAS,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAA;AAElC,SAAS,CAAC,KAAK,CAAC,QAAQ,CAAC,CAAC,IAAI,CAC1B,CAAC,GAAG,EAAC,GAAG,EAAE,EAAE,CAAC,IAAI,kCAAe,EAAE,CAAC,KAAK,CAAC,GAAG,EAAC,GAAG,CAAC,CACpD,CAAA;AAED,kBAAe,SAAS,CAAA"}

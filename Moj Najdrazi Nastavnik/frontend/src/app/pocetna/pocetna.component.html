@@ -1,0 +1,93 @@
+<form>
+    <table>
+        <tr>
+            <td>username:</td>
+            <td>
+                <input type="text" name="username" [(ngModel)]="username">
+            </td>
+        </tr>
+        <tr>
+            <td>password:</td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="password">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button (click)="login()">Log In</button>
+            </td>
+            <td [class.poruka]="1==1">
+                {{message}}
+            </td>
+        </tr>
+    </table>
+</form>
+<a routerLink="/register">Click here to register</a>
+<br>
+<a routerLink="/promenaLozinke">Click here to change a password</a>
+<hr>
+<div>
+    NUMBER OF STUDENTS: <span style="font-size: 50px;">{{numOfStudents}}</span>
+</div>
+<div>
+    NUMBER OF TEACHERS: <span style="font-size: 50px;">{{numOfTeachers}}</span>
+</div>
+<hr>
+<table>
+    <tr>
+        <td>
+            <input type="search" name="searchPredmet" [(ngModel)]="searchByPredmet" />
+        </td>
+        <td>
+            <input type="search" name="searchIme" [(ngModel)]="searchByIme" />
+        </td>
+        <td>
+            <input type="search" name="searchPrezime" [(ngModel)]="searchByPrezime" />
+        </td>
+        <td>
+            <button (click)="searchPredNas()">search</button>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            SUBJECT
+            <button (click)="predmetDown()">
+                <img src="assets/arrow_down.jpeg" style="width: 15px; height: 15px;">
+            </button>
+            <button (click)="predmetUp()">
+                <img src="assets/arrow_up.jpeg" style="width: 15px; height: 15px;">
+            </button>
+        </th>
+        <th>
+            TEACHER NAME
+            <button (click)="imeDown()">
+                <img src="assets/arrow_down.jpeg" style="width: 15px; height: 15px;">
+            </button>
+            <button (click)="imeUp()">
+                <img src="assets/arrow_up.jpeg" style="width: 15px; height: 15px;">
+            </button>
+        </th>
+        <th>
+            SURNAME
+            <button (click)="prezimeDown()">
+                <img src="assets/arrow_down.jpeg" style="width: 15px; height: 15px;">
+            </button>
+            <button (click)="prezimeUp()">
+                <img src="assets/arrow_up.jpeg" style="width: 15px; height: 15px;">
+            </button>
+        </th>
+        <td></td>
+    </tr>
+    <tr *ngFor="let prednas of predNasSearched">
+        <td>
+            {{prednas.predmet.naziv}}
+        </td>
+        <td>
+            {{prednas.nastavnik.ime}}
+        </td>
+        <td>
+            {{prednas.nastavnik.prezime}}
+        </td>
+        <td></td>
+    </tr>
+</table>

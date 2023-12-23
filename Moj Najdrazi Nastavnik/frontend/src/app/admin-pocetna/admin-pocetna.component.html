@@ -1,0 +1,25 @@
+<form>
+    <table>
+        <tr>
+            <td>username:</td>
+            <td>
+                <input type="text" name="username" [(ngModel)]="username">
+            </td>
+        </tr>
+        <tr>
+            <td>password:</td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="password">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button (click)="login()">Log In</button>
+            </td>
+            <td [class.poruka]="1==1">
+                {{message}}
+            </td>
+        </tr>
+    </table>
+</form>
+<hr>

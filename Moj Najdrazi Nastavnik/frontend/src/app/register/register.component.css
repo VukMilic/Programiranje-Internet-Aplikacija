@@ -1,0 +1,19 @@
+.poruka{
+    color: red;
+}
+
+.passwordCSS{
+    color: red;
+}
+
+input:valid {
+    background-color: palegreen;
+}
+  
+input:invalid {
+    background-color: lightpink;
+}
+
+#avatar{
+    background-color: white;
+}

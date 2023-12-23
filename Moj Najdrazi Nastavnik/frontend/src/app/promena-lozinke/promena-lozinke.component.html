@@ -1,0 +1,119 @@
+<form *ngIf="questionTrig == 0">
+    <table>
+        <tr>
+            <td>
+                Username:
+            </td>
+            <td>
+                <input type="text" name="username" [(ngModel)]="username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Old Password:
+            </td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="oldPassword">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                New Password:
+            </td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="newPassword">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                New Password again:
+            </td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="newPasswordAgain">
+            </td>
+        </tr>
+        <tr>
+            <button (click)="changePassword()" style="font-size: 15px;">Change Password</button>
+        </tr>
+    </table>
+</form>
+<hr>
+<h4 *ngIf="questionTrig == 0">If you forgot your old password, enter here <br>your username and then click the question
+    button:</h4>
+<form *ngIf="questionTrig == 0">
+    <table>
+        <tr>
+            <td>
+                Username:
+            </td>
+            <td>
+                <input type="text" name="username2" [(ngModel)]="username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button (click)="triggerQuestion()" style="font-size: 15px;">Question</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<form *ngIf="questionTrig == 1">
+    <table>
+        <tr>
+            <td>
+                <button (click)="backToRegularForm()">Go back</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Question:
+            </td>
+            <td>
+                {{question}} ?
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Answer:
+            </td>
+            <td>
+                <textarea name="answer" [(ngModel)]="answer"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button (click)="confirmAnswer()" style="font-size: 15px;">Confirm</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<hr>
+<div *ngIf="answerTrig == 1">
+    <h4>You can now change your password</h4>
+</div>
+<form *ngIf="answerTrig == 1">
+    <table>
+        <tr>
+            <td>
+                New Password:
+            </td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="newPassword">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                New Password again:
+            </td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="newPasswordAgain">
+            </td>
+        </tr>
+        <tr>
+            <button (click)="changePassword()" style="font-size: 15px;">Change Password</button>
+        </tr>
+    </table>
+</form>
+<span [class.poruka]="1==1">
+    {{message}}
+</span>

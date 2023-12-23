@@ -1,0 +1,229 @@
+<form>
+    <table>
+        <tr>
+            <td>
+                <button (click)="registerAsStudent()">Register as Student</button>
+            </td>
+            <td>
+                <button (click)="registerAsTeacher()">Register as Teacher</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<form (ngSubmit)="register()">
+    <table>
+        <tr>
+            <td>username:</td>
+            <td>
+                <input type="text" name="username" [(ngModel)]="username" required />
+            </td>
+        </tr>
+        <tr>
+            <td>password:</td>
+            <td>
+                <input type="password" name="password" [(ngModel)]="password"
+                    pattern="^((?=.*[A-Z])(?=.*[a-z].*[a-z].*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])[a-zA-Z](.{5,9}))$"
+                    required />
+            </td>
+        </tr>
+        <tr>
+            <td>password again:</td>
+            <td>
+                <input type="password" name="password2" [(ngModel)]="password2"
+                    pattern="^((?=.*[A-Z])(?=.*[a-z].*[a-z].*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])[a-zA-Z](.{5,9}))$"
+                    required />
+            </td>
+        </tr>
+        <tr>
+            <td>question:</td>
+            <td>
+                <input type="text" name="question" [(ngModel)]="question" required>
+            </td>
+        </tr>
+        <tr>
+            <td>answer:</td>
+            <td>
+                <input type="text" name="answer" [(ngModel)]="answer" required>
+            </td>
+        </tr>
+        <tr>
+            <td>firstname:</td>
+            <td>
+                <input type="text" name="firstname" [(ngModel)]="firstname" required>
+            </td>
+        </tr>
+        <tr>
+            <td>lastname:</td>
+            <td>
+                <input type="text" name="lastname" [(ngModel)]="lastname" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="radio" name="sex" value="male" [(ngModel)]="sex">Male
+            </td>
+            <td>
+                <input type="radio" name="sex" value="female" [(ngModel)]="sex">Female
+            </td>
+        </tr>
+        <tr>
+            <td>address:</td>
+            <td>
+                <input type="text" name="address" [(ngModel)]="address" required>
+            </td>
+        </tr>
+        <tr>
+            <td>phone number:</td>
+            <td>
+                <input type="text" name="phone" [(ngModel)]="phone" required>
+            </td>
+        </tr>
+        <tr>
+            <td>email:</td>
+            <td>
+                <input type="text" name="email" [(ngModel)]="email" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="slika">Upload a profile picture:</label>
+            </td>
+            <td>
+                <input type="file" id="slika" name="slika" (change)="imgSelected($event)"
+                    accept="image/png, image/jpg" />
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <div *ngIf="type == 'ucenik'">
+        <h3>Student</h3>
+        <table>
+            <tr>
+                <td>
+                    School:
+                </td>
+                <td>
+                    <select name="tipSkole" [(ngModel)]="tipSkole">
+                        <option value="osnovna">Osnovna</option>
+                        <option value="srednja-gimnazija">Srednja-gimnazija</option>
+                        <option value="srednja-strucna">Srednja-strucna</option>
+                        <option value="srednja-umetnicka">Srednja-umetnicka</option>
+                    </select>
+                </td>
+            </tr>
+            <tr *ngIf="tipSkole == 'osnovna'">
+                <td>
+                    Grade:
+                </td>
+                <td>
+                    <select name="razred" [(ngModel)]="razred">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                    </select>
+                </td>
+            </tr>
+            <tr *ngIf="tipSkole != 'osnovna'">
+                <td>
+                    Grade:
+                </td>
+                <td>
+                    <select name="razred" [(ngModel)]="razred">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit" style="width: 100px; height: 50px; font-size: large;">Register</button>
+                </td>
+                <td [class.poruka]="1==1">
+                    {{message}}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div *ngIf="type == 'nastavnik'">
+        <h3>Teacher</h3>
+        <table>
+            <tr>
+                <td>
+                    Upload your CV (pdf):
+                </td>
+                <td>
+                    <input type="file" id="cv" name="cv" (change)="cvSelected($event)" accept=".pdf" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    What subjects do you want to teach?
+                </td>
+                <td>
+                    <select multiple name="predmetiNizStringova" [(ngModel)]="predmetiNizStringova">
+                        <option value="Matematika">Matematika</option>
+                        <option value="Fizika">Fizika</option>
+                        <option value="Hemija">Hemija</option>
+                        <option value="Programiranje">Programiranje</option>
+                        <option value="Srpski jezik i knjizevnost">Srpski jezik i knjizevnost</option>
+                        <option value="Engleski jezik">Engleski jezik</option>
+                        <option value="Nemacki jezik">Nemacki jezik</option>
+                        <option value="Francuski jezik">Francuski jezik</option>
+                        <option value="Spanski jezik">Spanski jezik</option>
+                        <option value="Latinski jezik">Latinski jezik</option>
+                        <option value="Italijanski jezik">Italijanski jezik</option>
+                        <option value="Biologija">Biologija</option>
+                        <option value="Istorija">Istorija</option>
+                        <option value="Svet oko nas">Svet oko nas</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    If your subjects are not on the list, <br>
+                    type them here (comma separated):
+                </td>
+                <td>
+                    <textarea name="predmetiVanListe" [(ngModel)]="predmetiVanListe">
+                    </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Which grade would you like to teach?
+                </td>
+                <td>
+                    <select multiple name="uzrastiNizStringova" [(ngModel)]="uzrastiNizStringova">
+                        <option value="Osnovna skola 1-4. razred">Osnovna skola 1-4. razred</option>
+                        <option value="Osnovna skola 5-8. razred">Osnovna skola 5-8. razred</option>
+                        <option value="Srednja skola">Srednja skola</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    How did you find out about our website? 
+                </td>
+                <td>
+                    <textarea name="odgovorZaSajt" [(ngModel)]="odgovorZaSajt"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit" style="width: 100px; height: 50px; font-size: large;">Register</button>
+                </td>
+                <td [class.poruka]="1==1">
+                    {{message}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
