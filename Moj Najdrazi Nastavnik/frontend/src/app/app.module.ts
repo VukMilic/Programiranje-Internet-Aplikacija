@@ -13,6 +13,14 @@ import { NastavnikComponent } from './nastavnik/nastavnik.component';
 import { AdminComponent } from './admin/admin.component';
 import { RegisterComponent } from './register/register.component';
 import { PromenaLozinkeComponent } from './promena-lozinke/promena-lozinke.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { NastavnikDetaljiComponent } from './nastavnik-detalji/nastavnik-detalji.component';
 
 @NgModule({
   declarations: [
@@ -23,13 +31,20 @@ import { PromenaLozinkeComponent } from './promena-lozinke/promena-lozinke.compo
     NastavnikComponent,
     AdminComponent,
     RegisterComponent,
-    PromenaLozinkeComponent
+    PromenaLozinkeComponent,
+    NastavnikDetaljiComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]

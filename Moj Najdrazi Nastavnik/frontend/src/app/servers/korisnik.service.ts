@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PredmetNastavnik } from '../models/predmetNastavnik';
+import { PredmetNastavnikOcena } from '../models/predmetNastavnikOcena';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -95,9 +95,9 @@ export class KorisnikService {
     return this.http.get('http://127.0.0.1:4000/predmeti/getPredmeti')
   }
 
-  searchPredNas(predmetNastavnik, searchByPredmet, searchByIme, searchByPrezime): PredmetNastavnik[] {
-    let predNasSearched: PredmetNastavnik[] = [];
-    let predNasSearchedPom: PredmetNastavnik[] = [];
+  searchPredNas(predmetNastavnik, searchByPredmet, searchByIme, searchByPrezime): PredmetNastavnikOcena[] {
+    let predNasSearched: PredmetNastavnikOcena[] = [];
+    let predNasSearchedPom: PredmetNastavnikOcena[] = [];
 
     // in case that searchByPredmet is not null
     if (searchByPredmet) {

@@ -15,4 +15,17 @@ nasRouter.route('/getNastavnici').get(
     (req,res) => new NastavnikController().getNastavnici(req,res)
 )
 
+nasRouter.route('/getNastavnikByUsername').post(
+    (req,res) => new NastavnikController().getNastavnikByUsername(req,res)
+)
+
+nasRouter.route('/getOceneNastavnika').post(
+    (req,res) => new NastavnikController().getOceneNastavnika(req,res)
+)
+
+nasRouter.route('/getOcene').get(
+    (req,res) => new NastavnikController().getOcene(req,res)
+)
+
+
 export default nasRouter

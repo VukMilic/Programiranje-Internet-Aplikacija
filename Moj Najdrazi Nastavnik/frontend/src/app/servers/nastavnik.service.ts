@@ -39,4 +39,23 @@ export class NastavnikService {
     return this.http.get('http://127.0.0.1:4000/nastavnici/getNastavnici')
   }
 
+  getNastavnikByUsername(username){
+    let data = {
+      username: username
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/getNastavnikByUsername', data)
+  }
+
+  getOceneNastavnika(username){
+    let data = {
+      username: username
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/getOceneNastavnika', data)
+  }
+
+  getOcene(){
+    return this.http.get('http://127.0.0.1:4000/nastavnici/getOcene')
+  }
 }

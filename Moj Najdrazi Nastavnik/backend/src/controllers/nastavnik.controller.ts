@@ -1,5 +1,6 @@
 import express from 'express'
 import NastavnikModel from '../models/nastavnik'
+import OcenaModel from '../models/ocena'
 import bcrypt from "bcrypt";
 
 export class NastavnikController {
@@ -27,7 +28,7 @@ export class NastavnikController {
                 uzrast: req.body.uzrasti,
                 odgovorZaSajt: req.body.odgovorZaSajt
             })
-    
+
             noviNastavnik.save((err, res) => {
                 if (err) console.log(err)
                 else
@@ -37,18 +38,58 @@ export class NastavnikController {
     }
 
     countTeachers = (req: express.Request, resp: express.Response) => {
-        NastavnikModel.count({}, (err, num)=>{
-            if(err) console.log(err)
+        NastavnikModel.count({}, (err, num) => {
+            if (err) console.log(err)
             else
                 resp.json(num)
         })
     }
 
     getNastavnici = (req: express.Request, resp: express.Response) => {
-        NastavnikModel.find({}, (err, nastavnici)=>{
-            if(err) console.log(err)
+        NastavnikModel.find({}, (err, nastavnici) => {
+            if (err) console.log(err)
             else
                 resp.json(nastavnici)
         })
     }
+
+    getNastavnikByUsername = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+
+        NastavnikModel.findOne({ "kor_ime": username }, (err, nas) => {
+            if (err) console.log(err)
+            else
+                if (nas)
+                    resp.json(nas)
+                else
+                    resp.json(null)
+        })
+    }
+
+    getOceneNastavnika = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+
+        OcenaModel.find({"kor_ime_nastavnika": username}, (err, ocene)=>{
+            if(err) console.log(err)
+            else{
+                if(ocene)
+                    resp.json(ocene)
+                else
+                    resp.json(null)
+            }
+        })
+    }
+
+    getOcene = (req: express.Request, resp: express.Response) => {
+        OcenaModel.find({}, (err, ocene)=>{
+            if(err) console.log(err)
+            else{
+                if(ocene)
+                    resp.json(ocene)
+                else
+                    resp.json(null)
+            }
+        })
+    }
+    
 }

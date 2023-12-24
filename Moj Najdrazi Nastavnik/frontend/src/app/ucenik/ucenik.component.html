@@ -1,2 +1,137 @@
-<h3>{{trenUcenik.ime}} {{trenUcenik.prezime}}</h3>
-<button (click)="logout()">LOG OUT</button><br>
+<!-- <h3>{{trenUcenik.ime}} {{trenUcenik.prezime}}</h3>
+<button (click)="logout()">LOG OUT</button><br> -->
+<mat-toolbar>
+    <span style="text-align: center;">UCENIK</span>
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav mode="side" opened>
+
+        <img src="{{trenUcenik.slika}}" style="width: 50px;height: 50px;">
+        <div>{{trenUcenik.ime}}</div>
+        <hr>
+        <button mat-button (click)="toggleProfil()" style="background-color: green;">
+            <span>Profil</span>
+        </button>
+        <hr>
+        <button mat-button (click)="toggleNastavnici()" style="background-color: green;">
+            <span>Nastavnici</span>
+        </button>
+        <hr>
+        <button (click)="logout()">LOG OUT</button><br>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content mat-elevation-z4">
+            <div id="profil-ucenika" *ngIf="stavkaMenija == 0">
+                <table>
+                    <tr>
+                        <td>Profilna slika</td>
+                        <td>
+                            <img src="{{trenUcenik.slika}}" style="width: 150px;height: 150px;">
+                        </td>
+                        <td>
+                            <input type="file">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ime</td>
+                        <td>{{trenUcenik.ime}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Prezime</td>
+                        <td>{{trenUcenik.prezime}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Adresa</td>
+                        <td>{{trenUcenik.adresa}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{trenUcenik.mejl}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kontakt</td>
+                        <td>{{trenUcenik.kontakt}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tip skole</td>
+                        <td>{{trenUcenik.tipSkole}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Razred</td>
+                        <td>{{trenUcenik.razred}}</td>
+                        <td>
+                            <button>EDIT</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="nastavnici-ucenika" *ngIf="stavkaMenija == 1">
+                <table class="nastavnici_tabela">
+                    <tr>
+                        <td>
+                            <input type="search" name="searchPredmet" [(ngModel)]="searchByPredmet" />
+                        </td>
+                        <td>
+                            <input type="search" name="searchIme" [(ngModel)]="searchByIme" />
+                        </td>
+                        <td>
+                            <input type="search" name="searchPrezime" [(ngModel)]="searchByPrezime" />
+                        </td>
+                        <td>
+                            <button (click)="searchPredNas()">search</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            SUBJECT
+                        </th>
+                        <th>
+                            TEACHER NAME
+                        </th>
+                        <th>
+                            SURNAME
+                        </th>
+                        <th>
+                            AVG GRADE
+                        </th>
+                    </tr>
+                    <tr *ngFor="let prednas of predNasOcenaSearched">
+                        <td>
+                            {{prednas.predmet.naziv}}
+                        </td>
+                        <td>
+                            {{prednas.nastavnik.ime}}<br>
+                            <a routerLink="/nastavnik-detalji/{{prednas.nastavnik.kor_ime}}">profil</a>
+                        </td>
+                        <td>
+                            {{prednas.nastavnik.prezime}}
+                            <a routerLink="/nastavnik-detalji/{{prednas.nastavnik.kor_ime}}">profil</a>
+                        </td>
+                        <td>
+                            {{prednas.prosecna_ocena}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

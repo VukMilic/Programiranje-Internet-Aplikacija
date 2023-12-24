@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NastavnikController = void 0;
 const nastavnik_1 = __importDefault(require("../models/nastavnik"));
+const ocena_1 = __importDefault(require("../models/ocena"));
 class NastavnikController {
     constructor() {
         this.register = (req, resp) => {
@@ -52,6 +53,42 @@ class NastavnikController {
                     console.log(err);
                 else
                     resp.json(nastavnici);
+            });
+        };
+        this.getNastavnikByUsername = (req, resp) => {
+            let username = req.body.username;
+            nastavnik_1.default.findOne({ "kor_ime": username }, (err, nas) => {
+                if (err)
+                    console.log(err);
+                else if (nas)
+                    resp.json(nas);
+                else
+                    resp.json(null);
+            });
+        };
+        this.getOceneNastavnika = (req, resp) => {
+            let username = req.body.username;
+            ocena_1.default.find({ "kor_ime_nastavnika": username }, (err, ocene) => {
+                if (err)
+                    console.log(err);
+                else {
+                    if (ocene)
+                        resp.json(ocene);
+                    else
+                        resp.json(null);
+                }
+            });
+        };
+        this.getOcene = (req, resp) => {
+            ocena_1.default.find({}, (err, ocene) => {
+                if (err)
+                    console.log(err);
+                else {
+                    if (ocene)
+                        resp.json(ocene);
+                    else
+                        resp.json(null);
+                }
             });
         };
     }

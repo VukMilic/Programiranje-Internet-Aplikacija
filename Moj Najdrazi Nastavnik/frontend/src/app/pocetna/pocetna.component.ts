@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { UcenikService } from '../servers/ucenik.service';
 import { NastavnikService } from '../servers/nastavnik.service';
 import { Predmet } from '../models/predmet';
-import { PredmetNastavnik } from '../models/predmetNastavnik';
+import { PredmetNastavnik } from '../models/predmetNastavnikOcena';
 
 @Component({
   selector: 'app-pocetna',
@@ -21,6 +21,10 @@ export class PocetnaComponent implements OnInit {
     this.countTeachers();
     this.getPredmeti();
     this.getNastavnici();
+
+    this.numOfClassesWeek = "0";
+    this.numOfClassesMonth = "0";
+    
   }
 
   username: string
@@ -30,6 +34,8 @@ export class PocetnaComponent implements OnInit {
 
   numOfStudents: string;
   numOfTeachers: string;
+  numOfClassesWeek: string;
+  numOfClassesMonth: string;
 
   predmeti: Predmet[] = [];
   nastavnici: Nastavnik[] = [];

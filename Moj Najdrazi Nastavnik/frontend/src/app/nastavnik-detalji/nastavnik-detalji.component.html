@@ -1,0 +1,65 @@
+<div class="content">
+    <button mat-button (click)="goBack()" style="font-size: large; background-color: green; width: 100px; height: 50px;">Go back</button>
+    <table *ngIf="nastavnik != null">
+        <tr>
+            <td>Profile picture</td>
+            <td>
+                <img src="{{nastavnik.slika}}" style="width: 150px;height: 150px;">
+            </td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{nastavnik.ime}}</td>
+
+        </tr>
+        <tr>
+            <td>Surname</td>
+            <td>{{nastavnik.prezime}}</td>
+
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{nastavnik.mejl}}</td>
+
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{nastavnik.kontakt}}</td>
+
+        </tr>
+    </table>
+    <hr>
+    <table *ngIf="nastavnik != null" style="display: inline-block; margin-right: 100px; vertical-align: top; margin-left: 50px;">
+        <tr>
+            <th>{{nastavnik.ime}}'s subjects</th>
+        </tr>
+        <tr *ngFor="let p of predmetiNastavnika">
+            <td>
+                {{p.naziv}}
+            </td>
+        </tr>
+    </table>
+    <table *ngIf="nastavnik != null" style="display: inline-block; margin-right: 50px;">
+        <tr>
+            <th>{{nastavnik.ime}}'s students</th>
+            <th>Subject</th>
+            <th>Grade</th>
+        </tr>
+        <tr *ngFor="let ocena of oceneNastavnika">
+            <td>
+                {{ocena.kor_ime_ucenika}}
+            </td>
+            <td>
+                {{ocena.naziv_predmeta}}
+            </td>
+            <td>
+                {{ocena.ocena}}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <h3 style="font-size: large;">COMMENT SECTION</h3>
+    <table>
+
+    </table>
+</div>

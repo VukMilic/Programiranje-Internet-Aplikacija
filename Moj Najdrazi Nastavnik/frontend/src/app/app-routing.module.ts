@@ -7,6 +7,7 @@ import { UcenikComponent } from './ucenik/ucenik.component';
 import { NastavnikComponent } from './nastavnik/nastavnik.component';
 import { RegisterComponent } from './register/register.component';
 import { PromenaLozinkeComponent } from './promena-lozinke/promena-lozinke.component';
+import { NastavnikDetaljiComponent } from './nastavnik-detalji/nastavnik-detalji.component';
 
 const routes: Routes = [
   {path: '', component: PocetnaComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'ucenik', component: UcenikComponent},
   {path: 'nastavnik', component: NastavnikComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'promenaLozinke', component: PromenaLozinkeComponent}
+  {path: 'promenaLozinke', component: PromenaLozinkeComponent},
+  {path: 'nastavnik-detalji/:kor_ime', component: NastavnikDetaljiComponent}
 ];
 
 @NgModule({
