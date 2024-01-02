@@ -58,4 +58,77 @@ export class NastavnikService {
   getOcene(){
     return this.http.get('http://127.0.0.1:4000/nastavnici/getOcene')
   }
+
+  editIme(username, name){
+    let data = {
+      username: username,
+      name: name
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editIme', data)
+  }
+
+  editPrezime(username, surname){
+    let data = {
+      username: username,
+      surname: surname
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editPrezime', data)
+  }
+
+  editAdresu(username, address){
+    let data = {
+      username: username,
+      address: address
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editAdresu', data)
+  }
+
+  editMejl(username, email){
+    let data = {
+      username: username,
+      email: email
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editMejl', data)
+  }
+
+  editKontakt(username, phone){
+    let data = {
+      username: username,
+      phone: phone
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editKontakt', data)
+  }
+
+  editUzrast(username, uzrast){
+    let data = {
+      username: username,
+      uzrast: uzrast
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editUzrast', data)
+  }
+
+  editPredmeti(username, predmeti){
+    let data = {
+      username: username,
+      predmeti: predmeti
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editPredmeti', data)
+  }
+
+  editSlika(username, slika){
+    let data = {
+      username: username,
+      slika: slika
+    }
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/editSlika', data)
+  }
+
 }

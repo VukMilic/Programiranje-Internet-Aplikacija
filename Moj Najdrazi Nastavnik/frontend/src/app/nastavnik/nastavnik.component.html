@@ -1,2 +1,154 @@
-<h3>{{trenNastavnik.ime}} {{trenNastavnik.prezime}}</h3>
-<button (click)="logout()">LOG OUT</button><br>
+<mat-toolbar>
+    <span style="text-align: center;">UCENIK</span>
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav mode="side" opened>
+
+        <img src="{{trenNastavnik.slika}}" style="width: 50px;height: 50px; border-radius: 100px;">
+        <div>{{trenNastavnik.ime}}</div>
+        <hr>
+        <button mat-button (click)="toggleProfil()" style="background-color: green;">
+            <span>Profil</span>
+        </button>
+        <hr>
+        <button (click)="logout()">LOG OUT</button><br>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content mat-elevation-z4">
+            <div id="profil-ucenika" *ngIf="stavkaMenija == 0">
+                <form>
+                    <table>
+                        <tr>
+                            <td>Profilna slika</td>
+                            <td>
+                                <img src="{{trenNastavnik.slika}}" style="width: 150px;height: 150px; border-radius: 20px;">
+                            </td>
+                            <td>
+                                <input type="file" *ngIf="editujSliku == false" id="slika" name="slika" (change)="imgSelected($event)"
+                                    accept="image/png, image/jpg" />
+                                <button *ngIf="editujSliku == true" (click)="confirmSliku()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ime</td>
+                            <td>
+                                <span *ngIf="editujIme == false">{{trenNastavnik.ime}}</span>
+                                <input type="text" name="editovanoIme" [(ngModel)]="trenNastavnik.ime"
+                                    *ngIf="editujIme == true"
+                                    style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                            </td>
+                            <td>
+                                <button *ngIf="editujIme == false" (click)="editIme()">EDIT</button>
+                                <button *ngIf="editujIme == true" (click)="confirmIme()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Prezime</td>
+                            <td>
+                                <span *ngIf="editujPrezime == false">{{trenNastavnik.prezime}}</span>
+                                <input type="text" name="editovanoPrezime" [(ngModel)]="trenNastavnik.prezime"
+                                    *ngIf="editujPrezime == true"
+                                    style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                            </td>
+                            <td>
+                                <button *ngIf="editujPrezime == false" (click)="editPrezime()">EDIT</button>
+                                <button *ngIf="editujPrezime == true" (click)="confirmPrezime()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Adresa</td>
+                            <td>
+                                <span *ngIf="editujAdresu == false">{{trenNastavnik.adresa}}</span>
+                                <input type="text" name="editovanaAdresa" [(ngModel)]="trenNastavnik.adresa"
+                                    *ngIf="editujAdresu == true"
+                                    style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                            </td>
+                            <td>
+                                <button *ngIf="editujAdresu == false" (click)="editAdresu()">EDIT</button>
+                                <button *ngIf="editujAdresu == true" (click)="confirmAdresu()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>
+                                <span *ngIf="editujMejl == false">{{trenNastavnik.mejl}}</span>
+                                <input type="text" name="editovanMejl" [(ngModel)]="trenNastavnik.mejl"
+                                    *ngIf="editujMejl == true"
+                                    style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                            </td>
+                            <td>
+                                <button *ngIf="editujMejl == false" (click)="editMejl()">EDIT</button>
+                                <button *ngIf="editujMejl == true" (click)="confirmMejl()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kontakt</td>
+                            <td>
+                                <span *ngIf="editujKontakt == false">{{trenNastavnik.kontakt}}</span>
+                                <input type="text" name="editovanKontakt" [(ngModel)]="trenNastavnik.kontakt"
+                                    *ngIf="editujKontakt == true"
+                                    style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                            </td>
+                            <td>
+                                <button *ngIf="editujKontakt == false" (click)="editKontakt()">EDIT</button>
+                                <button *ngIf="editujKontakt == true" (click)="confirmKontakt()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Predmeti</td>
+                            <td>
+                                <ul *ngIf="editujPredmete == false">
+                                    <li *ngFor="let p of trenNastavnik.predmeti"
+                                        style="text-align: left; font-size: 20px;">{{p.naziv}}</li>
+                                </ul>
+                                <select multiple *ngIf="editujPredmete == true" name="editovaniPredmeti"
+                                    [(ngModel)]="predmetiNizStringova"
+                                    style="width: 300px; height: 100px; font-size: large; text-align: center;">
+                                    <option value="Matematika">Matematika</option>
+                                    <option value="Fizika">Fizika</option>
+                                    <option value="Hemija">Hemija</option>
+                                    <option value="Programiranje">Programiranje</option>
+                                    <option value="Srpski jezik i knjizevnost">Srpski jezik i knjizevnost</option>
+                                    <option value="Engleski jezik">Engleski jezik</option>
+                                    <option value="Nemacki jezik">Nemacki jezik</option>
+                                    <option value="Francuski jezik">Francuski jezik</option>
+                                    <option value="Spanski jezik">Spanski jezik</option>
+                                    <option value="Latinski jezik">Latinski jezik</option>
+                                    <option value="Italijanski jezik">Italijanski jezik</option>
+                                    <option value="Biologija">Biologija</option>
+                                    <option value="Istorija">Istorija</option>
+                                    <option value="Svet oko nas">Svet oko nas</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button *ngIf="editujPredmete == false" (click)="editPredmeti()">EDIT</button>
+                                <button *ngIf="editujPredmete == true" (click)="confirmPredmeti()">CONFIRM</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Uzrasti</td>
+                            <td>
+                                <ul *ngIf="editujUzrast == false">
+                                    <li *ngFor="let p of trenNastavnik.uzrast"
+                                        style="text-align: left; font-size: 20px;">{{p.uzrast}}</li>
+                                </ul>
+                                <select *ngIf="editujUzrast == true" multiple name="uzrastiNizStringova"
+                                    [(ngModel)]="uzrastiNizStringova"
+                                    style="width: 300px; height: 70px; font-size: large; text-align: center;">
+                                    <option value="Osnovna skola 1-4. razred">Osnovna skola 1-4. razred</option>
+                                    <option value="Osnovna skola 5-8. razred">Osnovna skola 5-8. razred</option>
+                                    <option value="Srednja skola">Srednja skola</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button *ngIf="editujUzrast == false" (click)="editUzrast()">EDIT</button>
+                                <button *ngIf="editujUzrast == true" (click)="confirmUzrast()">CONFIRM</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

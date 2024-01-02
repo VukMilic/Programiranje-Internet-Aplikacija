@@ -19,6 +19,8 @@ export class NastavnikDetaljiComponent implements OnInit {
 
     this.getNastavnikByUsername(kor_ime);
     this.getOceneNastavnika(kor_ime);
+
+    this.dupliCas = null;
   }
 
   nastavnik: Nastavnik = null;
@@ -26,13 +28,21 @@ export class NastavnikDetaljiComponent implements OnInit {
   oceneNastavnika: Ocena[] = [];
   prosecnaOcena: number;
 
+  izabraniPredmet: string;
+  izabraniDatum: Date;
+  izabranaDeskripcija: string;
+  dupliCas: string;
+
+  formMessage: string;
+
   message: string;
 
   getNastavnikByUsername(username){
     this.nasser.getNastavnikByUsername(username).subscribe((nas: Nastavnik)=>{
       if( nas != null){
         this.nastavnik = nas;
-        this.predmetiNastavnika = this.nastavnik.predmeti
+        this.predmetiNastavnika = this.nastavnik.predmeti;
+        this.izabraniPredmet = this.predmetiNastavnika[0].naziv;
       } else {
         this.message = "Cannot find the teacher"
       }
@@ -47,6 +57,22 @@ export class NastavnikDetaljiComponent implements OnInit {
         this.message = "Cannot find any grades"
       }
     })
+  }
+
+  zakaziCas(){
+    let today = new Date;
+    if(this.izabraniDatum != null){
+      let chosenDate = new Date(this.izabraniDatum);
+      if(chosenDate > today){
+        // datum je regularan
+        // sada ovde treba izvrsiti proveru da li ovaj nastavnik vec ima zakazan cas u to vreme
+        // ili ako je dvocas onda uradi proveru za dvocas
+      }else{
+        this.formMessage = "The chosen date has passed, please choose a regular one."
+      }
+    }else{
+      this.formMessage = "Please, choose a date."
+    }
   }
 
   goBack(){

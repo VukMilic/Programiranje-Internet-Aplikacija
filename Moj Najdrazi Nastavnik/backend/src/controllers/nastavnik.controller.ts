@@ -92,4 +92,100 @@ export class NastavnikController {
         })
     }
     
+    editIme = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let name = req.body.name
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"ime": name}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editPrezime = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let surname = req.body.surname
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"prezime": surname}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editAdresu = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let address = req.body.address
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"adresa": address}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editMejl = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let email = req.body.email
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"mejl": email}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editKontakt = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let phone = req.body.phone
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"kontakt": phone}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editUzrast = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let uzrast = req.body.uzrast
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"uzrast": uzrast}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editPredmeti = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let predmeti = req.body.predmeti
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"predmeti": predmeti}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+    
+    editSlika = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let slika = req.body.slika
+        
+        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"slika": slika}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
 }

@@ -27,5 +27,36 @@ nasRouter.route('/getOcene').get(
     (req,res) => new NastavnikController().getOcene(req,res)
 )
 
+nasRouter.route('/editIme').post(
+    (req,res) => new NastavnikController().editIme(req,res)
+)
+
+nasRouter.route('/editPrezime').post(
+    (req,res) => new NastavnikController().editPrezime(req,res)
+)
+
+nasRouter.route('/editAdresu').post(
+    (req,res) => new NastavnikController().editAdresu(req,res)
+)
+
+nasRouter.route('/editMejl').post(
+    (req,res) => new NastavnikController().editMejl(req,res)
+)
+
+nasRouter.route('/editKontakt').post(
+    (req,res) => new NastavnikController().editKontakt(req,res)
+)
+
+nasRouter.route('/editUzrast').post(
+    (req,res) => new NastavnikController().editUzrast(req,res)
+)
+
+nasRouter.route('/editPredmeti').post(
+    (req,res) => new NastavnikController().editPredmeti(req,res)
+)
+
+nasRouter.route('/editSlika').post(
+    (req,res) => new NastavnikController().editSlika(req,res)
+)
 
 export default nasRouter

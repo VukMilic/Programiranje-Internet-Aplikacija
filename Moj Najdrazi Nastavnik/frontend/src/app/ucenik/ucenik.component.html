@@ -7,7 +7,7 @@
 <mat-sidenav-container>
     <mat-sidenav mode="side" opened>
 
-        <img src="{{trenUcenik.slika}}" style="width: 50px;height: 50px;">
+        <img src="{{trenUcenik.slika}}" style="width: 50px;height: 50px; border-radius: 100px;">
         <div>{{trenUcenik.ime}}</div>
         <hr>
         <button mat-button (click)="toggleProfil()" style="background-color: green;">
@@ -27,59 +27,122 @@
                     <tr>
                         <td>Profilna slika</td>
                         <td>
-                            <img src="{{trenUcenik.slika}}" style="width: 150px;height: 150px;">
+                            <img src="{{trenUcenik.slika}}" style="width: 150px;height: 150px; border-radius: 20px;">
                         </td>
                         <td>
-                            <input type="file">
+                            <input type="file" *ngIf="editujSliku == false" id="slika" name="slika"
+                                (change)="imgSelected($event)" accept="image/png, image/jpg" />
+                            <button *ngIf="editujSliku == true" (click)="confirmSliku()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Ime</td>
-                        <td>{{trenUcenik.ime}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujIme == false">{{trenUcenik.ime}}</span>
+                            <input type="text" name="editovanoIme" [(ngModel)]="trenUcenik.ime"
+                                *ngIf="editujIme == true"
+                                style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                        </td>
+                        <td>
+                            <button *ngIf="editujIme == false" (click)="editIme()">EDIT</button>
+                            <button *ngIf="editujIme == true" (click)="confirmIme()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Prezime</td>
-                        <td>{{trenUcenik.prezime}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujPrezime == false">{{trenUcenik.prezime}}</span>
+                            <input type="text" name="editovanoPrezime" [(ngModel)]="trenUcenik.prezime"
+                                *ngIf="editujPrezime == true"
+                                style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                        </td>
+                        <td>
+                            <button *ngIf="editujPrezime == false" (click)="editPrezime()">EDIT</button>
+                            <button *ngIf="editujPrezime == true" (click)="confirmPrezime()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Adresa</td>
-                        <td>{{trenUcenik.adresa}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujAdresu == false">{{trenUcenik.adresa}}</span>
+                            <input type="text" name="editovanaAdresa" [(ngModel)]="trenUcenik.adresa"
+                                *ngIf="editujAdresu == true"
+                                style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                        </td>
+                        <td>
+                            <button *ngIf="editujAdresu == false" (click)="editAdresu()">EDIT</button>
+                            <button *ngIf="editujAdresu == true" (click)="confirmAdresu()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Email</td>
-                        <td>{{trenUcenik.mejl}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujMejl == false">{{trenUcenik.mejl}}</span>
+                            <input type="text" name="editovanMejl" [(ngModel)]="trenUcenik.mejl"
+                                *ngIf="editujMejl == true"
+                                style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                        </td>
+                        <td>
+                            <button *ngIf="editujMejl == false" (click)="editMejl()">EDIT</button>
+                            <button *ngIf="editujMejl == true" (click)="confirmMejl()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Kontakt</td>
-                        <td>{{trenUcenik.kontakt}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujKontakt == false">{{trenUcenik.kontakt}}</span>
+                            <input type="text" name="editovanKontakt" [(ngModel)]="trenUcenik.kontakt"
+                                *ngIf="editujKontakt == true"
+                                style="width: 150px; height: 40px; font-size: large; text-align: center;">
+                        </td>
+                        <td>
+                            <button *ngIf="editujKontakt == false" (click)="editKontakt()">EDIT</button>
+                            <button *ngIf="editujKontakt == true" (click)="confirmKontakt()">CONFIRM</button>
                         </td>
                     </tr>
                     <tr>
                         <td>Tip skole</td>
-                        <td>{{trenUcenik.tipSkole}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span *ngIf="editujTipSkole == false && editujTipSrednjeSkole == false">{{trenUcenik.tipSkole}}</span>
+                            <select name="editovanTipSkole" [(ngModel)]="izabraniTipSkole"
+                                *ngIf="editujTipSkole == true"
+                                style="width: 300px; height: 40px; font-size: large; text-align: center;">
+                                <option value="osnovna">Osnovna</option>
+                                <option value="srednja-gimnazija">Srednja-gimnazija</option>
+                                <option value="srednja-strucna">Srednja-strucna</option>
+                                <option value="srednja-umetnicka">Srednja-umetnicka</option>
+                            </select>
+                            <select name="editovanTipSrednjeSkole" [(ngModel)]="izabraniTipSrednjeSkole"
+                                *ngIf="editujTipSrednjeSkole == true"
+                                style="width: 300px; height: 40px; font-size: large; text-align: center;">
+                                <option value="srednja-gimnazija">Srednja-gimnazija</option>
+                                <option value="srednja-strucna">Srednja-strucna</option>
+                                <option value="srednja-umetnicka">Srednja-umetnicka</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button *ngIf="editujTipSkole == false && editujTipSrednjeSkole == false" (click)="editTipSkole()">EDIT</button>
+                            <button *ngIf="editujTipSkole == true || editujTipSrednjeSkole == true" (click)="confirmTipSkole()">CONFIRM</button>
+                            <br>
+                            <span style="color: red; font-size: small;">
+                                {{message}}
+                            </span>
                         </td>
                     </tr>
                     <tr>
                         <td>Razred</td>
-                        <td>{{trenUcenik.razred}}</td>
                         <td>
-                            <button>EDIT</button>
+                            <span>{{trenUcenik.razred}}</span>&nbsp;
+                            <button *ngIf="editujRazred == true && incFlag == false" (click)="razredUp()">
+                                <img src="assets/arrow_up.jpeg" style="width: 10px; height: 10px;">
+                            </button>
+                            <button *ngIf="editujRazred == true && incFlag == true" (click)="razredUp()" disabled>
+                                <img src="assets/arrow_up.jpeg" style="width: 10px; height: 10px;">
+                            </button>
+                        </td>
+                        <td>
+                            <button *ngIf="editujRazred == false" (click)="editRazred()">EDIT</button>
+                            <button *ngIf="editujRazred == true" (click)="confirmRazred()">CONFIRM</button>
                         </td>
                     </tr>
                 </table>

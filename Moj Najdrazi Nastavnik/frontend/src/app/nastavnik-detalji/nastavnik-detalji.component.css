@@ -1,3 +1,8 @@
+.poruka {
+    color: rgb(212, 23, 23);
+    font-size: 25px;
+}
+
 table {
     margin-left: auto;
     margin-right: auto;
@@ -21,7 +26,15 @@ h3 {
     text-align: center;
     background-color: #5f5e5e;
     color: #fff;
+}
 
+h2{
+    background-color: rgb(196, 243, 24);
+    color: #030303;
+    text-align: center;
+    margin-right: 33%;
+    margin-left: 33%;
+    border-radius: 20px;
 }
 
 .content {

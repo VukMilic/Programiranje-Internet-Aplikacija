@@ -91,6 +91,94 @@ class NastavnikController {
                 }
             });
         };
+        this.editIme = (req, resp) => {
+            let username = req.body.username;
+            let name = req.body.name;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "ime": name } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editPrezime = (req, resp) => {
+            let username = req.body.username;
+            let surname = req.body.surname;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "prezime": surname } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editAdresu = (req, resp) => {
+            let username = req.body.username;
+            let address = req.body.address;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "adresa": address } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editMejl = (req, resp) => {
+            let username = req.body.username;
+            let email = req.body.email;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "mejl": email } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editKontakt = (req, resp) => {
+            let username = req.body.username;
+            let phone = req.body.phone;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "kontakt": phone } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editUzrast = (req, resp) => {
+            let username = req.body.username;
+            let uzrast = req.body.uzrast;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "uzrast": uzrast } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editPredmeti = (req, resp) => {
+            let username = req.body.username;
+            let predmeti = req.body.predmeti;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "predmeti": predmeti } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editSlika = (req, resp) => {
+            let username = req.body.username;
+            let slika = req.body.slika;
+            nastavnik_1.default.updateOne({ "kor_ime": username }, { $set: { "slika": slika } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
     }
 }
 exports.NastavnikController = NastavnikController;

@@ -43,6 +43,95 @@ class UcenikController {
                     resp.json(num);
             });
         };
+        this.editSlika = (req, resp) => {
+            let username = req.body.username;
+            let slika = req.body.slika;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "slika": slika } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editIme = (req, resp) => {
+            let username = req.body.username;
+            let name = req.body.name;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "ime": name } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editPrezime = (req, resp) => {
+            let username = req.body.username;
+            let surname = req.body.surname;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "prezime": surname } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editAdresa = (req, resp) => {
+            let username = req.body.username;
+            let address = req.body.address;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "adresa": address } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editMejl = (req, resp) => {
+            let username = req.body.username;
+            let email = req.body.email;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "mejl": email } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editKontakt = (req, resp) => {
+            let username = req.body.username;
+            let phone = req.body.phone;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "kontakt": phone } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editTipSkole = (req, resp) => {
+            let username = req.body.username;
+            let tipSkole = req.body.tipSkole;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "tipSkole": tipSkole } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
+        this.editRazred = (req, resp) => {
+            let username = req.body.username;
+            let tipSkole = req.body.tipSkole;
+            let razred = req.body.razred;
+            ucenik_1.default.updateOne({ "kor_ime": username }, { $set: { "tipSkole": tipSkole, "razred": razred } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(res);
+                }
+            });
+        };
     }
 }
 exports.UcenikController = UcenikController;

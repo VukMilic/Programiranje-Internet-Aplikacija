@@ -41,4 +41,102 @@ export class UcenikController {
                 resp.json(num)
         })
     }
+
+    editSlika = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let slika = req.body.slika
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"slika": slika}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editIme = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let name = req.body.name
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"ime": name}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editPrezime = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let surname = req.body.surname
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"prezime": surname}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editAdresa = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let address = req.body.address
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"adresa": address}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editMejl = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let email = req.body.email
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"mejl": email}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editKontakt = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let phone = req.body.phone
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"kontakt": phone}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editTipSkole = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let tipSkole = req.body.tipSkole
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"tipSkole": tipSkole}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
+    editRazred = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        let tipSkole = req.body.tipSkole
+        let razred = req.body.razred
+        
+        UcenikModel.updateOne({"kor_ime": username}, {$set: {"tipSkole": tipSkole, "razred": razred}}, (err, res)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(res)
+            }
+        })
+    }
+
 }
