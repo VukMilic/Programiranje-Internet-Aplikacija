@@ -39,9 +39,16 @@ h2{
 
 .content {
     background-image: url('/assets/background_ucenik.jpeg');
-    height: calc(100vh - 50px);
+    height: calc(100vh - 20px);
     margin: 20px;
-    margin-left: 30;
+    margin-left: 30px;
+    font-size: 1.5rem;
+
+    border-radius: 10px;
+}
+
+.schedule_form{
+    background-image: url('/assets/background_ucenik.jpeg');
     font-size: 1.5rem;
 
     border-radius: 10px;

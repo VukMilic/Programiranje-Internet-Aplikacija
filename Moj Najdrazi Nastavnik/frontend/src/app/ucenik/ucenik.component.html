@@ -10,12 +10,20 @@
         <img src="{{trenUcenik.slika}}" style="width: 50px;height: 50px; border-radius: 100px;">
         <div>{{trenUcenik.ime}}</div>
         <hr>
-        <button mat-button (click)="toggleProfil()" style="background-color: green;">
+        <button mat-button (click)="toggleProfil()" style="background-color: green; width: 150px;">
             <span>Profil</span>
         </button>
         <hr>
-        <button mat-button (click)="toggleNastavnici()" style="background-color: green;">
+        <button mat-button (click)="toggleNastavnici()" style="background-color: green; width: 150px;">
             <span>Nastavnici</span>
+        </button>
+        <hr>
+        <button mat-button (click)="toggleCasovi()" style="background-color: green; width: 150px;">
+            <span>Casovi</span>
+        </button>
+        <hr>
+        <button mat-button (click)="toggleObavestenja()" style="background-color: green; width: 150px;">
+            <span>Obavestenja</span>
         </button>
         <hr>
         <button (click)="logout()">LOG OUT</button><br>
@@ -25,7 +33,7 @@
             <div id="profil-ucenika" *ngIf="stavkaMenija == 0">
                 <table>
                     <tr>
-                        <td>Profilna slika</td>
+                        <td>Profile picture</td>
                         <td>
                             <img src="{{trenUcenik.slika}}" style="width: 150px;height: 150px; border-radius: 20px;">
                         </td>
@@ -36,7 +44,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Ime</td>
+                        <td>Name</td>
                         <td>
                             <span *ngIf="editujIme == false">{{trenUcenik.ime}}</span>
                             <input type="text" name="editovanoIme" [(ngModel)]="trenUcenik.ime"
@@ -49,7 +57,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Prezime</td>
+                        <td>Surname</td>
                         <td>
                             <span *ngIf="editujPrezime == false">{{trenUcenik.prezime}}</span>
                             <input type="text" name="editovanoPrezime" [(ngModel)]="trenUcenik.prezime"
@@ -62,7 +70,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Adresa</td>
+                        <td>Address</td>
                         <td>
                             <span *ngIf="editujAdresu == false">{{trenUcenik.adresa}}</span>
                             <input type="text" name="editovanaAdresa" [(ngModel)]="trenUcenik.adresa"
@@ -88,7 +96,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Kontakt</td>
+                        <td>Phone</td>
                         <td>
                             <span *ngIf="editujKontakt == false">{{trenUcenik.kontakt}}</span>
                             <input type="text" name="editovanKontakt" [(ngModel)]="trenUcenik.kontakt"
@@ -101,7 +109,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Tip skole</td>
+                        <td>School</td>
                         <td>
                             <span *ngIf="editujTipSkole == false && editujTipSrednjeSkole == false">{{trenUcenik.tipSkole}}</span>
                             <select name="editovanTipSkole" [(ngModel)]="izabraniTipSkole"
@@ -130,7 +138,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Razred</td>
+                        <td>Grade</td>
                         <td>
                             <span>{{trenUcenik.razred}}</span>&nbsp;
                             <button *ngIf="editujRazred == true && incFlag == false" (click)="razredUp()">
@@ -186,7 +194,7 @@
                             <a routerLink="/nastavnik-detalji/{{prednas.nastavnik.kor_ime}}">profil</a>
                         </td>
                         <td>
-                            {{prednas.nastavnik.prezime}}
+                            {{prednas.nastavnik.prezime}}<br>
                             <a routerLink="/nastavnik-detalji/{{prednas.nastavnik.kor_ime}}">profil</a>
                         </td>
                         <td>
@@ -194,6 +202,12 @@
                         </td>
                     </tr>
                 </table>
+            </div>
+            <div id="casovi-ucenika" *ngIf="stavkaMenija == 2">
+
+            </div>
+            <div id="obavestenja-ucenika" *ngIf="stavkaMenija == 3">
+                
             </div>
         </div>
     </mat-sidenav-content>

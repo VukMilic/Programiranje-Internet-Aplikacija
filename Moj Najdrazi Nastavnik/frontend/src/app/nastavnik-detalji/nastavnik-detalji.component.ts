@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Nastavnik } from '../models/korisnik';
+import { Nastavnik, Ucenik } from '../models/korisnik';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NastavnikService } from '../servers/nastavnik.service';
 import { Predmet } from '../models/predmet';
 import { Ocena } from '../models/ocena';
+import { UcenikService } from '../servers/ucenik.service';
 
 @Component({
   selector: 'app-nastavnik-detalji',
@@ -12,10 +13,11 @@ import { Ocena } from '../models/ocena';
 })
 export class NastavnikDetaljiComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private nasser: NastavnikService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private nasser: NastavnikService, private ucenser: UcenikService, private router: Router) { }
 
   ngOnInit(): void {
     const kor_ime = this.route.snapshot.paramMap.get('kor_ime');
+    this.trenUcenik = JSON.parse(localStorage.getItem("trenKor"));
 
     this.getNastavnikByUsername(kor_ime);
     this.getOceneNastavnika(kor_ime);
@@ -24,6 +26,7 @@ export class NastavnikDetaljiComponent implements OnInit {
   }
 
   nastavnik: Nastavnik = null;
+  trenUcenik: Ucenik;
   predmetiNastavnika: Predmet[] = [];
   oceneNastavnika: Ocena[] = [];
   prosecnaOcena: number;
@@ -65,8 +68,15 @@ export class NastavnikDetaljiComponent implements OnInit {
       let chosenDate = new Date(this.izabraniDatum);
       if(chosenDate > today){
         // datum je regularan
-        // sada ovde treba izvrsiti proveru da li ovaj nastavnik vec ima zakazan cas u to vreme
-        // ili ako je dvocas onda uradi proveru za dvocas
+
+        // sada ide provera da li nastavnik koji je izabran ima nesto zakazano tada
+        
+        // ako je sve kako treba, upisi zahtev za cas
+        this.ucenser.setZahtevZaCas(this.nastavnik.kor_ime, this.trenUcenik.kor_ime, this.izabraniPredmet, this.izabraniDatum, this.izabranaDeskripcija).subscribe((resp: string)=>{
+          alert("Your request has been sent, and once the teacher reviews it, you will receive the response.");
+          this.router.navigate(['/ucenik'])
+        })
+      
       }else{
         this.formMessage = "The chosen date has passed, please choose a regular one."
       }

@@ -131,4 +131,12 @@ export class NastavnikService {
     return this.http.post('http://127.0.0.1:4000/nastavnici/editSlika', data)
   }
 
+  getCasoviNastavnika(username){
+    let data = {
+      username: username
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/getCasoviNastavnika', data)
+  }
+
 }

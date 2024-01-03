@@ -16,5 +16,6 @@ ucenRouter.route('/editMejl').post((req, res) => new ucenik_controller_1.UcenikC
 ucenRouter.route('/editKontakt').post((req, res) => new ucenik_controller_1.UcenikController().editKontakt(req, res));
 ucenRouter.route('/editTipSkole').post((req, res) => new ucenik_controller_1.UcenikController().editTipSkole(req, res));
 ucenRouter.route('/editRazred').post((req, res) => new ucenik_controller_1.UcenikController().editRazred(req, res));
+ucenRouter.route('/getUcenikByUsername').post((req, res) => new ucenik_controller_1.UcenikController().getUcenikByUsername(req, res));
 exports.default = ucenRouter;
 //# sourceMappingURL=ucenik.router.js.map

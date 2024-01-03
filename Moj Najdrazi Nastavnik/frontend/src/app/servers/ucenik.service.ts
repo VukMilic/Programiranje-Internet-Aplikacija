@@ -151,4 +151,24 @@ export class UcenikService {
     return this.http.post('http://127.0.0.1:4000/ucenici/editRazred', data)
   }
   
+  setZahtevZaCas(kor_ime_nastavnika, kor_ime_ucenika, naziv_predmeta, datum_i_vreme, deskripcija){
+    let data = {
+      kor_ime_nastavnika: kor_ime_nastavnika,
+      kor_ime_ucenika: kor_ime_ucenika,
+      naziv_predmeta: naziv_predmeta,
+      datum_i_vreme: datum_i_vreme,
+      deskripcija: deskripcija
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/setZahtevZaCas', data)
+  }
+
+  getUcenikByUsername(username){
+    let data = {
+      username: username
+    }
+
+    return this.http.post('http://127.0.0.1:4000/ucenici/getUcenikByUsername', data)
+  }
+
 }

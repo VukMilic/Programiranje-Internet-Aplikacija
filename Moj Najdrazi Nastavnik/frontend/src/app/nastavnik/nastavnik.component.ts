@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { KorisnikService } from '../servers/korisnik.service';
-import { Nastavnik } from '../models/korisnik';
+import { Nastavnik, Ucenik } from '../models/korisnik';
 import { NastavnikService } from '../servers/nastavnik.service';
 import { Uzrast } from '../models/uzrast';
 import { Predmet } from '../models/predmet';
+import { Cas, CasSaUcenikom } from '../models/cas';
+import { UcenikService } from '../servers/ucenik.service';
 
 @Component({
   selector: 'app-nastavnik',
@@ -12,7 +14,7 @@ import { Predmet } from '../models/predmet';
 })
 export class NastavnikComponent implements OnInit {
 
-  constructor(private korser: KorisnikService, private nasser: NastavnikService) { }
+  constructor(private korser: KorisnikService, private nasser: NastavnikService, private ucenser: UcenikService) { }
 
   ngOnInit(): void {
     this.trenNastavnik = JSON.parse(localStorage.getItem('trenKor'))
@@ -29,11 +31,20 @@ export class NastavnikComponent implements OnInit {
     this.editujUzrast = false;
     this.editujPredmete = false;
     this.editujSliku = false;
+
+    this.getCasoviNastavnika();
   }
 
   trenNastavnik: Nastavnik;
   uzrastiNizStringova: string[];
   predmetiNizStringova: string[];
+
+  casoviNastavnika: Cas[] = [];
+  // ovo sledece su casovi koji se prikazuju (sortirani i skraceni)
+  casoviNastavnikaSaUcenikom: CasSaUcenikom[] = [];
+  zahteviZaCasovima: Cas[] = [];
+  casoviMessage: string;
+
   stavkaMenija: number;
 
   editujIme: boolean;
@@ -44,6 +55,15 @@ export class NastavnikComponent implements OnInit {
   editujUzrast: boolean;
   editujPredmete: boolean;
   editujSliku: boolean;
+
+  toggleProfil() {
+    this.stavkaMenija = 0;
+  }
+
+  toggleCasovi(){
+    this.stavkaMenija = 1;
+    this.casoviNastavnikaSaUcenikom.sort(this.sortDatumi);
+  }
 
   imgSelected(event: any) {
     let fr = new FileReader()
@@ -63,10 +83,6 @@ export class NastavnikComponent implements OnInit {
     } else {
       this.editujSliku = false;
     }
-  }
-
-  toggleProfil() {
-    this.stavkaMenija = 0;
   }
 
   editIme() {
@@ -184,6 +200,56 @@ export class NastavnikComponent implements OnInit {
       this.editujPredmete = false;
     }
   }
+
+  // CASOVI - funkcije
+
+  sortDatumi(a, b){
+    if (a.datum_i_vreme > b.datum_i_vreme) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
+  getCasoviNastavnika(){
+    this.nasser.getCasoviNastavnika(this.trenNastavnik.kor_ime).subscribe((c: Cas[])=>{
+      if (c != null){
+        this.casoviMessage = "";
+        
+        c.forEach(cn => {
+          let datum = new Date();
+          datum.setDate(datum.getDate() + 3);
+          let datumIzNiza = new Date(cn.datum_i_vreme);
+          
+          if( datumIzNiza < datum){
+            this.casoviNastavnika.push(cn);
+          }
+        });
+    
+        this.casoviNastavnika.forEach(cn => {
+          this.ucenser.getUcenikByUsername(cn.kor_ime_ucenika).subscribe((ucen: Ucenik)=>{
+            if(ucen != null){
+              let data: CasSaUcenikom = {
+                kor_ime_nastavnika: cn.kor_ime_nastavnika,
+                kor_ime_ucenika: cn.kor_ime_ucenika,
+                datum_i_vreme: cn.datum_i_vreme,
+                deskripcija: cn.deskripcija,
+                naziv_predmeta: cn.naziv_predmeta,
+                ucenik: ucen,
+                datum: cn.datum_i_vreme.toString().substring(0,10),
+                vreme: cn.datum_i_vreme.toString().substring(11,16)
+              }
+              this.casoviNastavnikaSaUcenikom.push(data)
+            }
+          })
+        });
+      } else {
+        this.casoviMessage = "There are no classes for this Teacher";
+      }
+    })
+  }
+
+  // LOGOUT
 
   logout() {
     this.korser.logout();

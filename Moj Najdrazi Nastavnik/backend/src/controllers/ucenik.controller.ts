@@ -139,4 +139,15 @@ export class UcenikController {
         })
     }
 
+    getUcenikByUsername = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username
+        
+        UcenikModel.findOne({"kor_ime": username}, (err, ucenik)=>{
+            if(err) console.log(err)
+            else{
+                   resp.json(ucenik)
+            }
+        })
+    }
+
 }

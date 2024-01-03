@@ -132,6 +132,16 @@ class UcenikController {
                 }
             });
         };
+        this.getUcenikByUsername = (req, resp) => {
+            let username = req.body.username;
+            ucenik_1.default.findOne({ "kor_ime": username }, (err, ucenik) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(ucenik);
+                }
+            });
+        };
     }
 }
 exports.UcenikController = UcenikController;

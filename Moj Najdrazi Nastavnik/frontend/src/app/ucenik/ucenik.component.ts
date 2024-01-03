@@ -85,6 +85,14 @@ export class UcenikComponent implements OnInit {
     this.stavkaMenija = 1;
   }
 
+  toggleCasovi(){
+    this.stavkaMenija = 2;
+  }
+
+  toggleObavestenja(){
+    this.stavkaMenija = 3;
+  }
+
   getPredmeti() {
     this.korser.getPredmeti().subscribe((p: Predmet[]) => {
       if (p != null) {

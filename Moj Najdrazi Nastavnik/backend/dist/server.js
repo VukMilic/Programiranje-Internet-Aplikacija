@@ -11,6 +11,7 @@ const admin_router_1 = __importDefault(require("./routers/admin.router"));
 const ucenik_router_1 = __importDefault(require("./routers/ucenik.router"));
 const nastavnik_router_1 = __importDefault(require("./routers/nastavnik.router"));
 const predmet_router_1 = __importDefault(require("./routers/predmet.router"));
+const cas_router_1 = __importDefault(require("./routers/cas.router"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -25,6 +26,7 @@ router.use('/admin', admin_router_1.default);
 router.use('/ucenici', ucenik_router_1.default);
 router.use('/nastavnici', nastavnik_router_1.default);
 router.use('/predmeti', predmet_router_1.default);
+router.use('/casovi', cas_router_1.default);
 app.use('/', router);
 app.listen(4000, () => console.log(`Express server running on port 4000`));
 //# sourceMappingURL=server.js.map
