@@ -38,9 +38,54 @@ class CasController {
                 datum_i_vreme: req.body.datum_i_vreme,
                 deskripcija: req.body.deskripcija,
                 status: "waiting",
-                odgovor: ""
+                odgovor: "",
+                trajanje: req.body.trajanje
             });
             noviZahtevZaCas.save((err, res) => {
+                if (err)
+                    console.log(err);
+                else
+                    resp.json({ "message": "ok" });
+            });
+        };
+        this.setAccept = (req, resp) => {
+            let id = req.body.id;
+            let NoviCas = new cas_1.default({
+                kor_ime_nastavnika: req.body.kor_ime_nastavnika,
+                kor_ime_ucenika: req.body.kor_ime_ucenika,
+                naziv_predmeta: req.body.naziv_predmeta,
+                datum_i_vreme: req.body.datum_i_vreme,
+                deskripcija: req.body.deskripcija,
+                status: "not_started",
+                trajanje: req.body.trajanje
+            });
+            zahtev_za_cas_1.default.updateOne({ "_id": id }, { $set: { 'status': "accepted" } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else {
+                    NoviCas.save((err, ress) => {
+                        if (err)
+                            console.log(err);
+                        else
+                            resp.json({ "message": "ok" });
+                    });
+                }
+            });
+        };
+        this.setDecline = (req, resp) => {
+            let id = req.body.id;
+            let odgovor = req.body.odgovor;
+            zahtev_za_cas_1.default.updateOne({ "_id": id }, { $set: { 'status': "declined", 'odgovor': odgovor } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else
+                    resp.json({ "message": "ok" });
+            });
+        };
+        this.setCasoviStatus = (req, resp) => {
+            let id = req.body.id;
+            let status = req.body.status;
+            cas_1.default.updateOne({ "_id": id }, { $set: { 'status': status } }, (err, res) => {
                 if (err)
                     console.log(err);
                 else

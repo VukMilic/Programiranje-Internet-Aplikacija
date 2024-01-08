@@ -21,6 +21,9 @@ export class UcenikComponent implements OnInit {
     let pageName = 'ucenik'
     this.korser.checkToken(pageName);
 
+    this.getPredmeti();
+    this.getNastavnici();
+    
     this.trenUcenik = JSON.parse(localStorage.getItem('trenKor'))
     this.getUcenikUzrast();
 
@@ -37,9 +40,6 @@ export class UcenikComponent implements OnInit {
     this.editujSliku = false;
     this.editujTipSrednjeSkole = false;
     this.incFlag = false;
-
-    this.getPredmeti();
-    this.getNastavnici();
   }
 
   trenUcenik: Ucenik;

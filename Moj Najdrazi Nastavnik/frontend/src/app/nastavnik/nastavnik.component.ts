@@ -4,7 +4,7 @@ import { Nastavnik, Ucenik } from '../models/korisnik';
 import { NastavnikService } from '../servers/nastavnik.service';
 import { Uzrast } from '../models/uzrast';
 import { Predmet } from '../models/predmet';
-import { Cas, CasSaUcenikom } from '../models/cas';
+import { Cas, CasSaUcenikom, ZahtevZaCas, ZahtevZaCasSaUcenikom } from '../models/cas';
 import { UcenikService } from '../servers/ucenik.service';
 
 @Component({
@@ -22,7 +22,13 @@ export class NastavnikComponent implements OnInit {
     let pageName = 'nastavnik'
     this.korser.checkToken(pageName);
 
-    this.stavkaMenija = 0;
+    let casoviFlag = localStorage.getItem("casoviFlag")
+    if (casoviFlag == "yes") {
+      this.stavkaMenija = 1;
+      localStorage.setItem("casoviFlag", "no");
+    } else {
+      this.stavkaMenija = 0;
+    }
     this.editujIme = false;
     this.editujPrezime = false;
     this.editujAdresu = false;
@@ -33,7 +39,9 @@ export class NastavnikComponent implements OnInit {
     this.editujSliku = false;
 
     this.getCasoviNastavnika();
+    this.getZahteviZaCasNastavnika();
   }
+
 
   trenNastavnik: Nastavnik;
   uzrastiNizStringova: string[];
@@ -42,8 +50,12 @@ export class NastavnikComponent implements OnInit {
   casoviNastavnika: Cas[] = [];
   // ovo sledece su casovi koji se prikazuju (sortirani i skraceni)
   casoviNastavnikaSaUcenikom: CasSaUcenikom[] = [];
-  zahteviZaCasovima: Cas[] = [];
+  zahteviZaCasovima: ZahtevZaCas[] = [];
+  // ovo sledece su casovi koji se prikazuju (sortirani i skraceni)
+  zahteviZaCasovimaSaUcenikom: ZahtevZaCasSaUcenikom[] = [];
+  zahteviZaCasovimaFlags: Map<string, number> = new Map;
   casoviMessage: string;
+  zahteviMessage: string;
 
   stavkaMenija: number;
 
@@ -60,9 +72,21 @@ export class NastavnikComponent implements OnInit {
     this.stavkaMenija = 0;
   }
 
-  toggleCasovi(){
+  toggleCasovi() {
     this.stavkaMenija = 1;
+
+    let casoviPom: CasSaUcenikom[] = [];
+    this.casoviNastavnikaSaUcenikom.forEach(cnsu => {
+      if(cnsu.status != "finished"){
+        casoviPom.push(cnsu);
+      }
+    });
+    this.casoviNastavnikaSaUcenikom = casoviPom;
+
     this.casoviNastavnikaSaUcenikom.sort(this.sortDatumi);
+    this.casoviNastavnika = this.casoviNastavnikaSaUcenikom;
+
+    this.casoviNastavnikaSaUcenikom.splice(5);
   }
 
   imgSelected(event: any) {
@@ -203,7 +227,7 @@ export class NastavnikComponent implements OnInit {
 
   // CASOVI - funkcije
 
-  sortDatumi(a, b){
+  sortDatumi(a, b) {
     if (a.datum_i_vreme > b.datum_i_vreme) {
       return 1;
     } else {
@@ -211,35 +235,42 @@ export class NastavnikComponent implements OnInit {
     }
   }
 
-  getCasoviNastavnika(){
-    this.nasser.getCasoviNastavnika(this.trenNastavnik.kor_ime).subscribe((c: Cas[])=>{
-      if (c != null){
+  getCasoviNastavnika() {
+    this.nasser.getCasoviNastavnika(this.trenNastavnik.kor_ime).subscribe((c: Cas[]) => {
+      if (c != null) {
         this.casoviMessage = "";
-        
+
         c.forEach(cn => {
           let datum = new Date();
           datum.setDate(datum.getDate() + 3);
           let datumIzNiza = new Date(cn.datum_i_vreme);
-          
-          if( datumIzNiza < datum){
+
+          if (datumIzNiza < datum && cn.status != "finished") {
             this.casoviNastavnika.push(cn);
           }
         });
-    
+
         this.casoviNastavnika.forEach(cn => {
-          this.ucenser.getUcenikByUsername(cn.kor_ime_ucenika).subscribe((ucen: Ucenik)=>{
-            if(ucen != null){
+          this.ucenser.getUcenikByUsername(cn.kor_ime_ucenika).subscribe((ucen: Ucenik) => {
+            if (ucen != null) {
               let data: CasSaUcenikom = {
+                _id: cn._id,
                 kor_ime_nastavnika: cn.kor_ime_nastavnika,
                 kor_ime_ucenika: cn.kor_ime_ucenika,
                 datum_i_vreme: cn.datum_i_vreme,
                 deskripcija: cn.deskripcija,
                 naziv_predmeta: cn.naziv_predmeta,
+                status: cn.status,
+                trajanje: cn.trajanje,
                 ucenik: ucen,
-                datum: cn.datum_i_vreme.toString().substring(0,10),
-                vreme: cn.datum_i_vreme.toString().substring(11,16)
+                datum: cn.datum_i_vreme.toString().substring(0, 10),
+                vreme: cn.datum_i_vreme.toString().substring(11, 16)
               }
-              this.casoviNastavnikaSaUcenikom.push(data)
+              this.casoviNastavnikaSaUcenikom.push(data);
+              if (this.casoviNastavnika.indexOf(cn) == this.casoviNastavnika.length - 1) {
+                this.casoviNastavnikaSaUcenikom.sort(this.sortDatumi);
+                this.casoviNastavnikaSaUcenikom.splice(5);
+              }
             }
           })
         });
@@ -248,6 +279,211 @@ export class NastavnikComponent implements OnInit {
       }
     })
   }
+
+  getZahteviZaCasNastavnika() {
+    this.nasser.getZahteviZaCasNastavnika(this.trenNastavnik.kor_ime).subscribe((z: ZahtevZaCas[]) => {
+      if (z != null) {
+        z.forEach(ze => {
+          if (ze.status == "waiting") {
+            this.zahteviZaCasovima.push(ze)
+          }
+        });
+
+        this.zahteviZaCasovima.splice(5);
+
+        if (this.zahteviZaCasovima.length == 0) {
+          this.zahteviMessage = "NO NEW REQUESTS"
+        } else {
+          this.zahteviMessage = ""
+        }
+
+        this.zahteviZaCasovima.forEach(zzc => {
+          this.ucenser.getUcenikByUsername(zzc.kor_ime_ucenika).subscribe((ucen: Ucenik) => {
+            if (ucen != null) {
+              let data: ZahtevZaCasSaUcenikom = {
+                _id: zzc._id,
+                kor_ime_nastavnika: zzc.kor_ime_nastavnika,
+                kor_ime_ucenika: zzc.kor_ime_ucenika,
+                datum_i_vreme: zzc.datum_i_vreme,
+                deskripcija: zzc.deskripcija,
+                naziv_predmeta: zzc.naziv_predmeta,
+                status: zzc.status,
+                odgovor: zzc.odgovor,
+                trajanje: zzc.trajanje,
+                ucenik: ucen,
+                datum: zzc.datum_i_vreme.toString().substring(0, 10),
+                vreme: zzc.datum_i_vreme.toString().substring(11, 16)
+              }
+              this.zahteviZaCasovimaSaUcenikom.push(data)
+              this.zahteviZaCasovimaFlags[data._id] = 0;
+            }
+          })
+        });
+      }
+    })
+  }
+
+  accept(id) {
+    let data: Cas;
+
+    this.zahteviZaCasovimaSaUcenikom.forEach(zzc => {
+      if (zzc._id == id) {
+        this.nasser.setAccept(zzc._id, zzc.kor_ime_nastavnika, zzc.kor_ime_ucenika, zzc.naziv_predmeta, zzc.datum_i_vreme, zzc.deskripcija, zzc.trajanje).subscribe((resp: string) => {
+          if (resp != null) {
+            localStorage.setItem("casoviFlag", "yes")
+            location.reload()
+          }
+        })
+      }
+    });
+
+  }
+
+  declineFlag(id) {
+    if (this.zahteviZaCasovimaFlags[id] == 0) {
+      this.zahteviZaCasovimaFlags[id] = 1;
+    }
+  }
+
+  decline(id, odgovor) {
+    this.nasser.setDecline(id, odgovor).subscribe((resp: string) => {
+      if (resp != null) {
+        localStorage.setItem("casoviFlag", "yes")
+        location.reload()
+      }
+    })
+  }
+
+  // JOIN-ovanje na cas
+
+  intervalIdJoin = setInterval(() => this.checkJoin(), 1000);
+  intervalIdFinish = setInterval(() => this.checkFinish(), 1000);
+  flag00: boolean = false;
+  flag15: boolean = false;
+  flag30: boolean = false;
+  flag45: boolean = false;
+
+  checkJoin() {
+    let sada = new Date();
+    // console.log(sada.getMinutes());
+    // console.log(sada.getSeconds());
+
+    if ((sada.getMinutes() >= 15 && sada.getMinutes() <= 30 && this.flag15 == false)
+      || (sada.getMinutes() >= 45 && this.flag45 == false)) {
+      // na svakih 15 do punog sata ili polovine sata, uradi proveru da li treba da se pojavi neki join
+      if (sada.getMinutes() >= 15 && sada.getMinutes() <= 30) {
+        sada.setMinutes(30);
+        sada.setSeconds(0);
+        this.flag15 = true;
+      }
+      else {
+        sada.setHours(sada.getHours() + 1)
+        sada.setMinutes(0);
+        sada.setSeconds(0);
+        this.flag45 = true;
+      }
+
+      this.casoviNastavnikaSaUcenikom.forEach(c => {
+        let datumIzNiza = new Date(c.datum_i_vreme);
+        if (sada.getFullYear() === datumIzNiza.getFullYear() &&
+          sada.getMonth() === datumIzNiza.getMonth() &&
+          sada.getDate() === datumIzNiza.getDate() &&
+          sada.getHours() === datumIzNiza.getHours() &&
+          sada.getMinutes() === datumIzNiza.getMinutes() &&
+          sada.getSeconds() === datumIzNiza.getSeconds()) {
+          this.nasser.setCasoviStatus(c._id, "start").subscribe((resp: string) => {
+            if (resp != null) {
+              c.status = "start";
+            }
+          });
+        }
+      });
+
+    } else if ((sada.getMinutes() >= 0 && sada.getMinutes() <= 15 && this.flag45 == true)
+      || (sada.getMinutes() >= 30 && sada.getMinutes() <= 45 && this.flag15 == true)) {
+      if (sada.getMinutes() >= 0 && sada.getMinutes() <= 15) {
+        this.flag45 = false;
+      } else {
+        this.flag15 = false;
+      }
+
+    }
+  }
+
+  checkFinish() {
+    let sada = new Date();
+
+    if (sada.getMinutes() >= 0 && sada.getMinutes() < 30 && this.flag00 == false) {
+      this.flag00 = true;
+      this.flag30 = false;
+
+      this.casoviNastavnikaSaUcenikom.forEach(c => {
+        let datumIzNiza = new Date(c.datum_i_vreme);
+        // postavi sat (ili 2) vremena unapred kada bi se cas zavrsio
+        if(c.trajanje == "2 hours"){
+          datumIzNiza.setHours(datumIzNiza.getHours() + 2);
+        }else{
+          datumIzNiza.setHours(datumIzNiza.getHours() + 1);
+        }
+        // znaci ako je prosao 
+        if (sada > datumIzNiza) {
+          this.nasser.setCasoviStatus(c._id, "finished").subscribe((resp: string) => {
+            if (resp != null) {
+              c.status = "finished";
+            }
+          });
+        }
+      });
+
+    } else if (sada.getMinutes() >= 30 && this.flag30 == false) {
+      this.flag00 = false;
+      this.flag30 = true;
+
+      this.casoviNastavnikaSaUcenikom.forEach(c => {
+        let datumIzNiza = new Date(c.datum_i_vreme);
+        // postavi sat (ili 2 sata) vremena unapred kada bi se cas zavrsio
+        if(c.trajanje == "2 hours"){
+          datumIzNiza.setHours(datumIzNiza.getHours() + 2);
+        }else{
+          datumIzNiza.setHours(datumIzNiza.getHours() + 1);
+        }
+        // znaci ako je prosao 
+        if (sada > datumIzNiza) {
+          this.nasser.setCasoviStatus(c._id, "finished").subscribe((resp: string) => {
+            if (resp != null) {
+              c.status = "finished";
+            }
+          });
+        }
+      });
+    }
+  }
+
+  join(id) {
+    this.nasser.setCasoviStatus(id, "started").subscribe((resp: string) => {
+      if (resp != null) {
+        this.casoviNastavnikaSaUcenikom.forEach(cnsu => {
+          if (cnsu._id == id) {
+            cnsu.status = "started"
+          }
+        });
+      }
+    })
+  }
+
+  finish(id) {
+    this.nasser.setCasoviStatus(id, "finished").subscribe((resp: string) => {
+      if (resp != null) {
+        this.casoviNastavnikaSaUcenikom.forEach(cnsu => {
+          if (cnsu._id == id) {
+            cnsu.status = "finished"
+          }
+        });
+        this.toggleCasovi();
+      }
+    })
+  }
+
 
   // LOGOUT
 

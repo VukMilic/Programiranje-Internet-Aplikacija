@@ -139,4 +139,44 @@ export class NastavnikService {
     return this.http.post('http://127.0.0.1:4000/casovi/getCasoviNastavnika', data)
   }
 
+  getZahteviZaCasNastavnika(username){
+    let data = {
+      username: username
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/getZahteviZaCasNastavnika', data)
+  }
+
+  setAccept(id, kor_ime_nastavnika, kor_ime_ucenika, naziv_predmeta, datum_i_vreme, deskripcija, trajanje){
+    let data = {
+      id: id,
+      kor_ime_nastavnika: kor_ime_nastavnika,
+      kor_ime_ucenika: kor_ime_ucenika,
+      naziv_predmeta: naziv_predmeta,
+      datum_i_vreme: datum_i_vreme,
+      deskripcija: deskripcija,
+      trajanje: trajanje
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/setAccept', data)
+  }
+
+  setDecline(id, odgovor){
+    let data = {
+      id: id,
+      odgovor: odgovor
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/setDecline', data)
+  }
+
+  setCasoviStatus(id, status){
+    let data = {
+      id: id,
+      status: status
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/setCasoviStatus', data)
+  }
+
 }

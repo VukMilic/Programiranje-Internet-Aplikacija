@@ -20,6 +20,12 @@ let Cas = new Schema({
     },
     deskripcija: {
         type: String
+    },
+    status: {
+        type: String
+    },
+    trajanje: {
+        type: String
     }
 });
 exports.default = mongoose_1.default.model("CasModel", Cas, "cas");

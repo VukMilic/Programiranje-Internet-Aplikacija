@@ -17,7 +17,8 @@ const routes: Routes = [
   {path: 'nastavnik', component: NastavnikComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'promenaLozinke', component: PromenaLozinkeComponent},
-  {path: 'nastavnik-detalji/:kor_ime', component: NastavnikDetaljiComponent}
+  {path: 'nastavnik-detalji/:kor_ime', component: NastavnikDetaljiComponent},
+  {path: 'nastavnik/:casovi', component: NastavnikComponent}
 ];
 
 @NgModule({

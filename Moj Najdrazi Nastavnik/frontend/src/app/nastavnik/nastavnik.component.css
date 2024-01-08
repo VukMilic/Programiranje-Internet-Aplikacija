@@ -10,6 +10,19 @@
     font-size: 1.2rem;
 }
 
+table .tabela-zahtevi{
+    background-color: yellow;
+    th{
+        background-color: rgb(31, 29, 29);
+        width: fit-content;
+        height: fit-content;    }
+    td{
+        background-color: yellowgreen;
+        width: fit-content;
+        height: fit-content;
+    }
+}
+
 table{
     margin-left: auto;
     margin-right: auto;
@@ -56,7 +69,7 @@ mat-sidenav-container{
 
 .content{
     background-image: url('/assets/background_ucenik.jpeg');
-    height: calc(100vh - 50px);
+    height: calc(100vh);
     margin: 20px;
     margin-left: 30;
     display: flex;

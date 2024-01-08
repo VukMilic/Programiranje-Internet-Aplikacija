@@ -24,6 +24,9 @@ let ZahtevZaCas = new Schema({
     },
     odgovor:{
         type: String
+    },
+    trajanje:{
+        type: String
     }
 })
 

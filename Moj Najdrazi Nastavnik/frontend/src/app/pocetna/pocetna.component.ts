@@ -24,7 +24,6 @@ export class PocetnaComponent implements OnInit {
 
     this.numOfClassesWeek = "0";
     this.numOfClassesMonth = "0";
-    
   }
 
   username: string

@@ -26,6 +26,9 @@ let ZahtevZaCas = new Schema({
     },
     odgovor: {
         type: String
+    },
+    trajanje: {
+        type: String
     }
 });
 exports.default = mongoose_1.default.model("ZahtevZaCasModel", ZahtevZaCas, "zahtev_za_cas");

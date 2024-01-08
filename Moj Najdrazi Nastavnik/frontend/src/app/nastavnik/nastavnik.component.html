@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <span style="text-align: center;">UCENIK</span>
+    <span style="text-align: center;">TEACHER</span>
 </mat-toolbar>
 
 <mat-sidenav-container>
@@ -155,56 +155,165 @@
                 </form>
             </div>
             <div id="casovi-ucenika" *ngIf="stavkaMenija == 1">
-                <h2 style="font-size: 30px;">SCHEDULED CLASSES</h2>
+                <h2 style="font-size: 30px; margin-left: 20px; margin-top: 50px;">SCHEDULED CLASSES</h2>
                 <span style="color: red;">{{casoviMessage}}</span>
-                <table class="tabela-casovi">
-                    <tr>
-                        <td *ngFor="let cas of casoviNastavnikaSaUcenikom">
-                            <table>
-                                <tr>
-                                    <th>
-                                        Date
-                                    </th>
-                                    <td>
-                                        {{cas.datum}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Time
-                                    </th>
-                                    <td>
-                                        {{cas.vreme}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Subject
-                                    </th>
-                                    <td>
-                                        {{cas.naziv_predmeta}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <td>
-                                        {{cas.ucenik.ime}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Surname
-                                    </th>
-                                    <td>
-                                        {{cas.ucenik.prezime}}
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                <form>
+                    <table class="tabela-casovi">
+                        <tr>
+                            <td *ngFor="let cas of casoviNastavnikaSaUcenikom">
+                                <table>
+                                    <tr>
+                                        <th>
+                                            Date
+                                        </th>
+                                        <td>
+                                            {{cas.datum}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Time
+                                        </th>
+                                        <td>
+                                            {{cas.vreme}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Subject
+                                        </th>
+                                        <td>
+                                            {{cas.naziv_predmeta}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <td>
+                                            {{cas.ucenik.ime}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Surname
+                                        </th>
+                                        <td>
+                                            {{cas.ucenik.prezime}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Duration
+                                        </th>
+                                        <td>
+                                            {{cas.trajanje}}
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="cas.status == 'start'">
+                                        <td colspan="2" style="background-color: rgb(180, 242, 57);">
+                                            <button mat-button (click)="join(cas._id)" style="background-color: rgb(180, 242, 57);">JOIN</button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="cas.status == 'started'">
+                                        <td colspan="2" style="background-color: rgb(242, 100, 57);">
+                                            <button mat-button (click)="finish(cas._id)" style="background-color: rgb(231, 53, 53);">FINISH</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <hr>
+                <h2 style="font-size: 30px; margin-left: 20px; text-align: center;">
+                    LIST OF REQUESTS<br>
+                    <span style="color: red; size: large; text-align: center;">{{zahteviMessage}}</span>
+                </h2>
+                <form>
+                    <table class="tabela-zahtevi">
+                        <tr>
+                            <td *ngFor="let zahtev of zahteviZaCasovimaSaUcenikom">
+                                <table class="tabela-zahtevi">
+                                    <tr>
+                                        <th>
+                                            Date
+                                        </th>
+                                        <td>
+                                            {{zahtev.datum}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Time
+                                        </th>
+                                        <td>
+                                            {{zahtev.vreme}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Subject
+                                        </th>
+                                        <td>
+                                            {{zahtev.naziv_predmeta}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <td>
+                                            {{zahtev.ucenik.ime}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Surname
+                                        </th>
+                                        <td>
+                                            {{zahtev.ucenik.prezime}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Duration
+                                        </th>
+                                        <td>
+                                            {{zahtev.trajanje}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button mat-button (click)="declineFlag(zahtev._id)"
+                                                style="background-color: rgb(231, 53, 53);">
+                                                DECLINE
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button mat-button (click)="accept(zahtev._id)"
+                                                style="background-color: rgb(180, 242, 57);">
+                                                ACCEPT
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="zahteviZaCasovimaFlags[zahtev._id] == 1">
+                                        <td>
+                                            <button mat-button (click)="decline(zahtev._id, zahtev.odgovor)"
+                                                style="background-color: rgb(231, 53, 53);">
+                                                CONFIRM
+                                            </button><br>
+                                        </td>
+                                        <td>
+                                            <span style="font-size: small;">You need to add explanation why:</span><br>
+                                            <textarea name="odgovor" [(ngModel)]="zahtev.odgovor"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </div>
     </mat-sidenav-content>
