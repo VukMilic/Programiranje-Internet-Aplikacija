@@ -108,9 +108,16 @@
                 </td>
             </tr>
         </table>
-        <span class="poruka">
-            {{formMessage}}
-        </span>
+        <div class="poruka">
+            <b>{{formMessage}}</b>
+        </div>
+        <br>
+        <div *ngIf="formMessageTimes.length > 0" style="color: rgb(23, 73, 212); text-align: center;">
+            <b>Teacher is occupied that day in the following periods:
+            <div *ngFor="let time of formMessageTimes" style="text-align: center;">
+                {{time}}
+            </div></b>
+        </div>
         <br>
         <div style="text-align: center; font-size: 20px;" *ngIf="nastavnik != null">
             *Please complete the form above if you would like to arrange a class with {{nastavnik.ime}}.<br>

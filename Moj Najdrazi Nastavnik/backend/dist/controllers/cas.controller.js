@@ -67,7 +67,7 @@ class CasController {
                         if (err)
                             console.log(err);
                         else
-                            resp.json({ "message": "ok" });
+                            resp.json(NoviCas);
                     });
                 }
             });

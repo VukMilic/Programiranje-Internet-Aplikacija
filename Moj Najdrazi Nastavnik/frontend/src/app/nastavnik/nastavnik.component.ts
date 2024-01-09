@@ -22,13 +22,6 @@ export class NastavnikComponent implements OnInit {
     let pageName = 'nastavnik'
     this.korser.checkToken(pageName);
 
-    let casoviFlag = localStorage.getItem("casoviFlag")
-    if (casoviFlag == "yes") {
-      this.stavkaMenija = 1;
-      localStorage.setItem("casoviFlag", "no");
-    } else {
-      this.stavkaMenija = 0;
-    }
     this.editujIme = false;
     this.editujPrezime = false;
     this.editujAdresu = false;
@@ -38,7 +31,16 @@ export class NastavnikComponent implements OnInit {
     this.editujPredmete = false;
     this.editujSliku = false;
 
-    this.getCasoviNastavnika();
+    let casoviFlag = localStorage.getItem("casoviFlag")
+    if (casoviFlag == "yes") {
+      this.stavkaMenija = 1;
+      localStorage.setItem("casoviFlag", "no");
+      this.casoviNastavnikaSaUcenikom = JSON.parse(localStorage.getItem("casoviNastavnikaSaUcenikom"));
+    } else {
+      this.stavkaMenija = 0;
+      this.getCasoviNastavnika();
+    }
+
     this.getZahteviZaCasNastavnika();
   }
 
@@ -56,6 +58,7 @@ export class NastavnikComponent implements OnInit {
   zahteviZaCasovimaFlags: Map<string, number> = new Map;
   casoviMessage: string;
   zahteviMessage: string;
+  acceptMessage: string;
 
   stavkaMenija: number;
 
@@ -77,7 +80,7 @@ export class NastavnikComponent implements OnInit {
 
     let casoviPom: CasSaUcenikom[] = [];
     this.casoviNastavnikaSaUcenikom.forEach(cnsu => {
-      if(cnsu.status != "finished"){
+      if (cnsu.status != "finished") {
         casoviPom.push(cnsu);
       }
     });
@@ -270,6 +273,7 @@ export class NastavnikComponent implements OnInit {
               if (this.casoviNastavnika.indexOf(cn) == this.casoviNastavnika.length - 1) {
                 this.casoviNastavnikaSaUcenikom.sort(this.sortDatumi);
                 this.casoviNastavnikaSaUcenikom.splice(5);
+                localStorage.setItem("casoviNastavnikaSaUcenikom", JSON.stringify(this.casoviNastavnikaSaUcenikom));
               }
             }
           })
@@ -324,12 +328,81 @@ export class NastavnikComponent implements OnInit {
   }
 
   accept(id) {
-    let data: Cas;
+    this.acceptMessage = "";
 
     this.zahteviZaCasovimaSaUcenikom.forEach(zzc => {
       if (zzc._id == id) {
-        this.nasser.setAccept(zzc._id, zzc.kor_ime_nastavnika, zzc.kor_ime_ucenika, zzc.naziv_predmeta, zzc.datum_i_vreme, zzc.deskripcija, zzc.trajanje).subscribe((resp: string) => {
-          if (resp != null) {
+        // provera da slucajno Nastavnik ne prihvati dva zahteva cija se vremena preklapaju
+        for (let i = 0; i < this.casoviNastavnika.length; i++) {
+          let cnDatum = new Date(this.casoviNastavnika[i].datum_i_vreme);
+          let zzcDatum = new Date(zzc.datum_i_vreme);
+          if (zzcDatum.getFullYear() === cnDatum.getFullYear() &&
+            zzcDatum.getMonth() === cnDatum.getMonth() &&
+            zzcDatum.getDay() === cnDatum.getDay()) {
+
+            let sati;
+            if (zzc.trajanje == "2 hours") {
+              sati = 2;
+            } else {
+              sati = 1;
+            }
+            // a - pocetna satnica izabranog casa
+            // b - krajnja satnica izabranog casa
+            let a = new Date(zzcDatum);
+            let b = new Date(zzcDatum);
+            b.setHours(b.getHours() + sati);
+            // c - pocetna satnica vec postojeceg casa
+            // d - krajnja satnica vec postojeceg casa
+            let c = new Date(this.casoviNastavnika[i].datum_i_vreme);
+            let d = new Date(this.casoviNastavnika[i].datum_i_vreme);
+            if (this.casoviNastavnika[i].trajanje == "2 hours") {
+              d.setHours(d.getHours() + 2);
+            } else {
+              d.setHours(d.getHours() + 1);
+            }
+            // i sad ide provera da li se preklapaju izmedju sebe
+            if ((b > c && b <= d) ||
+              (a >= c && a < d) ||
+              (a < c && b > d)) {
+              this.acceptMessage = "You cannot accept this request because you already have a class in that time slot";
+              return;
+            }
+
+          }
+
+        }
+
+        this.nasser.setAccept(zzc._id, zzc.kor_ime_nastavnika, zzc.kor_ime_ucenika, zzc.naziv_predmeta, zzc.datum_i_vreme, zzc.deskripcija, zzc.trajanje).subscribe((noviCas: Cas) => {
+          if (noviCas != null) {
+
+            this.ucenser.getUcenikByUsername(noviCas.kor_ime_ucenika).subscribe((ucen: Ucenik) => {
+              if (ucen != null) {
+                // vratio sam noviCas koji sam insertovao u bazu
+                // zatim treba da dohvatim ucenika da bih imao podatak CasSaUcenikom
+                // i to onda hocu da pushujem u niz casova koji se prikazuje u scheduleru
+                // to cu onda ubaciti u localStorage i onda izvuci iz localStorage-a prilikom reloadovanja stranice
+                let data: CasSaUcenikom = {
+                  _id: noviCas._id,
+                  kor_ime_nastavnika: noviCas.kor_ime_nastavnika,
+                  kor_ime_ucenika: noviCas.kor_ime_ucenika,
+                  datum_i_vreme: noviCas.datum_i_vreme,
+                  deskripcija: noviCas.deskripcija,
+                  naziv_predmeta: noviCas.naziv_predmeta,
+                  status: noviCas.status,
+                  trajanje: noviCas.trajanje,
+                  ucenik: ucen,
+                  datum: noviCas.datum_i_vreme.toString().substring(0, 10),
+                  vreme: noviCas.datum_i_vreme.toString().substring(11, 16)
+                }
+                this.casoviNastavnikaSaUcenikom.push(data);
+
+                this.casoviNastavnikaSaUcenikom.sort(this.sortDatumi);
+                this.casoviNastavnikaSaUcenikom.splice(5);
+
+                localStorage.setItem("casoviNastavnikaSaUcenikom", JSON.stringify(this.casoviNastavnikaSaUcenikom));
+              }
+            })
+
             localStorage.setItem("casoviFlag", "yes")
             location.reload()
           }
@@ -340,6 +413,8 @@ export class NastavnikComponent implements OnInit {
   }
 
   declineFlag(id) {
+    this.acceptMessage = "";
+
     if (this.zahteviZaCasovimaFlags[id] == 0) {
       this.zahteviZaCasovimaFlags[id] = 1;
     }
@@ -420,13 +495,13 @@ export class NastavnikComponent implements OnInit {
       this.casoviNastavnikaSaUcenikom.forEach(c => {
         let datumIzNiza = new Date(c.datum_i_vreme);
         // postavi sat (ili 2) vremena unapred kada bi se cas zavrsio
-        if(c.trajanje == "2 hours"){
+        if (c.trajanje == "2 hours") {
           datumIzNiza.setHours(datumIzNiza.getHours() + 2);
-        }else{
+        } else {
           datumIzNiza.setHours(datumIzNiza.getHours() + 1);
         }
         // znaci ako je prosao 
-        if (sada > datumIzNiza) {
+        if (sada >= datumIzNiza) {
           this.nasser.setCasoviStatus(c._id, "finished").subscribe((resp: string) => {
             if (resp != null) {
               c.status = "finished";
@@ -442,9 +517,9 @@ export class NastavnikComponent implements OnInit {
       this.casoviNastavnikaSaUcenikom.forEach(c => {
         let datumIzNiza = new Date(c.datum_i_vreme);
         // postavi sat (ili 2 sata) vremena unapred kada bi se cas zavrsio
-        if(c.trajanje == "2 hours"){
+        if (c.trajanje == "2 hours") {
           datumIzNiza.setHours(datumIzNiza.getHours() + 2);
-        }else{
+        } else {
           datumIzNiza.setHours(datumIzNiza.getHours() + 1);
         }
         // znaci ako je prosao 

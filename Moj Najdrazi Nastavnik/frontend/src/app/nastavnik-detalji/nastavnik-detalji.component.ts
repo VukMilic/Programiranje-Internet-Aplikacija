@@ -82,40 +82,109 @@ export class NastavnikDetaljiComponent implements OnInit {
 
   clearForm() {
     this.dupliCas = null
+    let chosenDate = new Date(this.izabraniDatum);
+
+    if (this.formMessage == "The chosen time slot is already reserved!") {
+      // u slucaju da je korisnik izabrao period koji je zauzet
+      // ispisi mu u kojim periodima je nastavnik zauzet taj dan
+      this.casoviNastavnika.forEach(cn => {
+        let cnDatum = new Date(cn.datum_i_vreme);
+        if (chosenDate.getFullYear() === cnDatum.getFullYear() &&
+          chosenDate.getMonth() === cnDatum.getMonth() &&
+          chosenDate.getDay() === cnDatum.getDay()) {
+
+          let b = new Date(cnDatum)
+          let c = new Date(cnDatum)
+          if (cn.trajanje == "2 hours") {
+            c.setHours(cnDatum.getHours() + 2)
+          } else {
+            c.setHours(cnDatum.getHours() + 1)
+          }
+
+          let b_min: string;
+          let c_min: string;
+          if (b.getMinutes() == 0) {
+            b_min = "00";
+          } else {
+            b_min = "30"
+          }
+          if (c.getMinutes() == 0) {
+            c_min = "00";
+          } else {
+            c_min = "30"
+          }
+
+          let msg = b.getHours() + ":" + b_min + "-" + c.getHours() + ":" + c_min;
+          this.formMessageTimes.push(msg)
+        }
+      });
+    }
+    else if (this.formMessage == "On the selected date, this teacher is occupied all day.") {
+      // u slucaju da je nastavnik zauzet taj ceo dan
+      // proveri da li je zauzet i do kraja te sedmice
+      let breakFlag = false;
+      let busyWeekFlag = false;
+
+      for (let i = (chosenDate.getDay() + 1); i < 6; i++) {
+        // za svaki radni dan do kraja nedelje proveri da li je zauzet
+        chosenDate.setDate(chosenDate.getDate() + (i - chosenDate.getDay()))
+
+        let a = new Date(chosenDate);
+        a.setHours(10);
+        a.setMinutes(0);
+
+        for (let j = 0; j < this.casoviNastavnika.length; j++) {
+          let cnDatum = new Date(this.casoviNastavnika[j].datum_i_vreme);
+          if (chosenDate.getFullYear() === cnDatum.getFullYear() &&
+            chosenDate.getMonth() === cnDatum.getMonth() &&
+            chosenDate.getDay() === cnDatum.getDay()) {
+
+            // b = "10:30" npr
+            // c = "11:30" npr
+            let b = new Date(cnDatum)
+            let c = new Date(cnDatum)
+            if (this.casoviNastavnika[j].trajanje == "2 hours") {
+              c.setHours(cnDatum.getHours() + 2)
+            } else {
+              c.setHours(cnDatum.getHours() + 1)
+            }
+            // ako je a + 1 sat manje ili jednako od b znaci da ima dovoljno prostora da se zakaze jedan cas u tom periodu
+            a.setHours(a.getHours() + 1)
+            if (a <= b) {
+              breakFlag = true;
+              break;
+            }
+
+            // idemo na sledeci termin koji pocinje na c (kada se zavrsio ovaj prethodni)
+            a = new Date(c);
+
+            if (a.getHours() == 18 || (a.getHours() == 17 && a.getMinutes() == 30)) {
+              breakFlag = false;
+              if(i == 5){
+                // znaci dosli smo do kraja poslednjeg dana
+                // => popunjena cela nedelja
+                busyWeekFlag = true;
+              }
+            }
+          }
+        };
+
+        if(breakFlag == true){
+          break;
+        }
+      }
+
+      if(busyWeekFlag == true){
+        this.formMessage = "This teacher is busy till the end of the chosen week."
+      }
+    }
   }
 
   zakaziCas() {
-    // this.returnMessage = "On the chosen date this teacher is free in the following times:";
-    // // a = "08:00"
-    // let a = new Date(this.izabraniDatum);
-    // a.setHours(8);
-    // a.setMinutes(0);
+    // resetuj prvo podatke o greski
+    this.formMessageTimes = [];
+    this.formMessage = "";
 
-    // this.casoviNastavnika.forEach(cn => {
-    //   let cnDatum = new Date(cn.datum_i_vreme);
-    //   if (chosenDate.getFullYear() === cnDatum.getFullYear() &&
-    //     chosenDate.getMonth() === cnDatum.getMonth() &&
-    //     chosenDate.getDay() === cnDatum.getDay()) {
-
-    //     // b = "10:30" npr
-    //     // c = "11:30" npr
-    //     let b = new Date(cnDatum)
-    //     let c = new Date(cnDatum)
-    //     if (cn.trajanje == "2 hours") {
-    //       c.setHours(cnDatum.getHours() + 2)
-    //     } else {
-    //       c.setHours(cnDatum.getHours() + 1)
-    //     }
-    //     // ako je a + 1 sat manje ili jednako od b znaci da ima dovoljno prostora da se zakaze jedan cas u tom periodu
-    //     a.setHours(a.getHours() + 1)
-    //     if(a <= b){
-    //       a.setHours(a.getHours() - 1)
-    //       this.returnMessageTimes.push(a.toString() + " - " + b.toString())
-    //     }
-    //     // i ako je imalo prostora i ako nije, svakako se ide na sledeci termin koji pocinje na c (kada se zavrsio ovaj prethodni)
-    //     a = new Date(c);
-    //   }
-    // });
     if (this.izabraniDatum != null) {
 
       let chosenDate = new Date(this.izabraniDatum);
@@ -186,10 +255,11 @@ export class NastavnikDetaljiComponent implements OnInit {
           if (a <= b) {
             break;
           }
+
           // idemo na sledeci termin koji pocinje na c (kada se zavrsio ovaj prethodni)
           a = new Date(c);
-          
-          if(a.getHours() == 18 || (a.getHours() == 17 && a.getMinutes() == 30)){
+
+          if (a.getHours() == 18 || (a.getHours() == 17 && a.getMinutes() == 30)) {
             this.formMessage = "On the selected date, this teacher is occupied all day."
             this.clearForm();
             return;
@@ -228,14 +298,15 @@ export class NastavnikDetaljiComponent implements OnInit {
         }
       }
 
+      if (this.izabranaDeskripcija == null) {
+        this.izabranaDeskripcija = "";
+      }
 
       // ako je sve kako treba, upisi zahtev za cas
       this.ucenser.setZahtevZaCas(this.nastavnik.kor_ime, this.trenUcenik.kor_ime, this.izabraniPredmet, this.izabraniDatum, this.izabranaDeskripcija, this.dupliCas).subscribe((resp: string) => {
         alert("Your request has been sent, and once the teacher reviews it, you will receive the response.");
         this.router.navigate(['/ucenik'])
       })
-
-
 
     } else {
       this.formMessage = "Please choose a date."
