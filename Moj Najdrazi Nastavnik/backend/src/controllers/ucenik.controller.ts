@@ -150,4 +150,11 @@ export class UcenikController {
         })
     }
 
+    getUcenici = (req: express.Request, resp: express.Response) => {
+        UcenikModel.find({}, (err, ucenici)=>{
+            if(err) console.log(err)
+            else
+                resp.json(ucenici)
+        })
+    }
 }

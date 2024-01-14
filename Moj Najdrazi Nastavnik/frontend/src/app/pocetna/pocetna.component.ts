@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { KorisnikService } from '../servers/korisnik.service';
-import { Korisnik, Nastavnik } from '../models/korisnik';
+import { Korisnik, Nastavnik, Ucenik } from '../models/korisnik';
 import { Router } from '@angular/router';
 import { UcenikService } from '../servers/ucenik.service';
 import { NastavnikService } from '../servers/nastavnik.service';
@@ -21,6 +21,7 @@ export class PocetnaComponent implements OnInit {
     this.countTeachers();
     this.getPredmeti();
     this.getNastavnici();
+    this.getUcenici();
 
     this.numOfClassesWeek = "0";
     this.numOfClassesMonth = "0";
@@ -37,6 +38,7 @@ export class PocetnaComponent implements OnInit {
   numOfClassesMonth: string;
 
   predmeti: Predmet[] = [];
+  ucenici: Ucenik[] = [];
   nastavnici: Nastavnik[] = [];
   predmetNastavnik: PredmetNastavnik[] = [];
 
@@ -51,14 +53,20 @@ export class PocetnaComponent implements OnInit {
         if (kor.tip == "nastavnik") {
           localStorage.setItem('token', 'nastavnik');
           localStorage.setItem('trenKor', JSON.stringify(kor))
+          localStorage.setItem('sviNastavnici', JSON.stringify(this.nastavnici));
+          localStorage.setItem('sviUcenici', JSON.stringify(this.ucenici));
           this.router.navigate(['/nastavnik'])
         } else if (kor.tip == "ucenik") {
           localStorage.setItem('token', 'ucenik');
-          localStorage.setItem('trenKor', JSON.stringify(kor))
+          localStorage.setItem('trenKor', JSON.stringify(kor));
+          localStorage.setItem('sviNastavnici', JSON.stringify(this.nastavnici));
+          localStorage.setItem('sviUcenici', JSON.stringify(this.ucenici));
           this.router.navigate(['/ucenik'])
         } else {
           localStorage.setItem('token', 'admin');
-          localStorage.setItem('trenAdm', JSON.stringify(kor))
+          localStorage.setItem('trenAdm', JSON.stringify(kor));
+          localStorage.setItem('sviNastavnici', JSON.stringify(this.nastavnici));
+          localStorage.setItem('sviUcenici', JSON.stringify(this.ucenici));
           this.router.navigate(['/admin'])
         }
       } else {
@@ -116,6 +124,14 @@ export class PocetnaComponent implements OnInit {
         this.searchPredNas();
       }
     })  
+  }
+
+  getUcenici(){
+    this.ucenser.getUcenici().subscribe((u: Ucenik[])=>{
+      if(u != null){
+        this.ucenici = u;
+      }
+    })
   }
 
   // funkcija za search

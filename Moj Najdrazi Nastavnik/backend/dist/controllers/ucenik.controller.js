@@ -142,6 +142,14 @@ class UcenikController {
                 }
             });
         };
+        this.getUcenici = (req, resp) => {
+            ucenik_1.default.find({}, (err, ucenici) => {
+                if (err)
+                    console.log(err);
+                else
+                    resp.json(ucenici);
+            });
+        };
     }
 }
 exports.UcenikController = UcenikController;

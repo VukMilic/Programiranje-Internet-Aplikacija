@@ -16,6 +16,19 @@ export class CasController {
         })
     }
 
+    getCasoviUcenika = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username;
+
+        CasModel.find({ "kor_ime_ucenika": username }, (err, casovi) => {
+            if (err) console.log(err)
+            else
+                if (casovi)
+                    resp.json(casovi)
+                else
+                    resp.json({ "message": "This student has no classes" })
+        })
+    }
+
     getZahteviZaCasNastavnika = (req: express.Request, resp: express.Response) => {
         let username = req.body.username;
 
@@ -95,4 +108,16 @@ export class CasController {
                 resp.json({ "message": "ok" })
         })
     }
+
+    getCasoviUcenikaINastavnika = (req: express.Request, resp: express.Response) => {
+        let usernameTeacher = req.body.usernameTeacher
+        let usernameStudent = req.body.usernameStudent
+
+        CasModel.find({ "kor_ime_nastavnika": usernameTeacher, "kor_ime_ucenika": usernameStudent }, (err, casovi) => {
+            if (err) console.log(err)
+            else
+                resp.json(casovi)
+        })
+    }
+
 }

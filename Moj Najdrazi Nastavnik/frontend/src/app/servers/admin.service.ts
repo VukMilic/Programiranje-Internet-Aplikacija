@@ -18,4 +18,10 @@ export class AdminService {
 
     return this.http.post('http://127.0.0.1:4000/admin/login', data)
   }
+
+  getSveZahteve(){
+    
+    return this.http.get('http://127.0.0.1:4000/nastavnici/getSveZahteve')
+  }
+
 }

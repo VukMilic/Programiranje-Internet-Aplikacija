@@ -1,4 +1,4 @@
-import { Ucenik } from "./korisnik";
+import { Nastavnik, Ucenik } from "./korisnik";
 
 export class Cas{
     _id: string;
@@ -15,6 +15,13 @@ export class CasSaUcenikom extends Cas{
     ucenik: Ucenik;
     datum: string;
     vreme: string;
+}
+
+export class CasSaNastavnikom extends Cas{
+    nastavnik: Nastavnik;
+    datum: string;
+    vremeOd: string;
+    vremeDo: string;
 }
 
 export class ZahtevZaCas{

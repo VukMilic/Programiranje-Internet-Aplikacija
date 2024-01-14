@@ -1,10 +1,18 @@
 import express from 'express'
 import { NastavnikController } from '../controllers/nastavnik.controller'
 
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 const nasRouter = express.Router()
 
 nasRouter.route('/register').post(
     (req,res) => new NastavnikController().register(req,res)
+)
+
+nasRouter.route('/sendCV').post( 
+    upload.single('selectedCV'),
+    (req,res) => new NastavnikController().sendCV(req,res)
 )
 
 nasRouter.route('/countTeachers').get(
@@ -57,6 +65,10 @@ nasRouter.route('/editPredmeti').post(
 
 nasRouter.route('/editSlika').post(
     (req,res) => new NastavnikController().editSlika(req,res)
+)
+
+nasRouter.route('/getSveZahteve').get(
+    (req,res) => new NastavnikController().getSveZahteve(req,res)
 )
 
 export default nasRouter

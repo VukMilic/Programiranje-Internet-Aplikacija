@@ -19,6 +19,17 @@ class CasController {
                     resp.json({ "message": "This teacher has no classes" });
             });
         };
+        this.getCasoviUcenika = (req, resp) => {
+            let username = req.body.username;
+            cas_1.default.find({ "kor_ime_ucenika": username }, (err, casovi) => {
+                if (err)
+                    console.log(err);
+                else if (casovi)
+                    resp.json(casovi);
+                else
+                    resp.json({ "message": "This student has no classes" });
+            });
+        };
         this.getZahteviZaCasNastavnika = (req, resp) => {
             let username = req.body.username;
             zahtev_za_cas_1.default.find({ "kor_ime_nastavnika": username }, (err, casovi) => {
@@ -90,6 +101,16 @@ class CasController {
                     console.log(err);
                 else
                     resp.json({ "message": "ok" });
+            });
+        };
+        this.getCasoviUcenikaINastavnika = (req, resp) => {
+            let usernameTeacher = req.body.usernameTeacher;
+            let usernameStudent = req.body.usernameStudent;
+            cas_1.default.find({ "kor_ime_nastavnika": usernameTeacher, "kor_ime_ucenika": usernameStudent }, (err, casovi) => {
+                if (err)
+                    console.log(err);
+                else
+                    resp.json(casovi);
             });
         };
     }

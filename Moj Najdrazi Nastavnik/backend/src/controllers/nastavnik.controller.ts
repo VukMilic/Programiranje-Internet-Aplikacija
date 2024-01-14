@@ -1,16 +1,20 @@
 import express from 'express'
 import NastavnikModel from '../models/nastavnik'
+import ZahtevZaRegistracijuModel from '../models/zahtev_za_registraciju'
 import OcenaModel from '../models/ocena'
-import bcrypt from "bcrypt";
+
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 export class NastavnikController {
+
     register = (req: express.Request, resp: express.Response) => {
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
 
         bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
             // Store hash in your password DB.
-            let noviNastavnik = new NastavnikModel({
+            let noviZahtev = new ZahtevZaRegistracijuModel({
                 kor_ime: req.body.username,
                 lozinka: hash,
                 pitanje: req.body.question,
@@ -23,18 +27,33 @@ export class NastavnikController {
                 mejl: req.body.email,
                 tip: "nastavnik",
                 slika: req.body.selectedImage,
-                CV: req.body.selectedCV,
                 predmeti: req.body.predmeti,
                 uzrast: req.body.uzrasti,
-                odgovorZaSajt: req.body.odgovorZaSajt
+                odgovorZaSajt: req.body.odgovorZaSajt,
+                status: "waiting"
             })
 
-            noviNastavnik.save((err, res) => {
+            console.log("usao si ovde");
+
+            noviZahtev.save((err, res) => {
                 if (err) console.log(err)
                 else
                     resp.json({ "message": "ok" })
             })
         });
+    }
+
+    sendCV = (req: express.Request, resp: express.Response) => {
+        let username = req.body.username;
+        let selectedCV = req.file;
+
+        console.log("Usao ovde; username = " + username + "; " + "selectedCV.name" + selectedCV.filename);
+
+        ZahtevZaRegistracijuModel.updateOne({"kor_ime": username}, {$push: {"CV": selectedCV}}, (err, res) => {
+            if (err) console.log(err)
+            else
+                resp.json({ "message": "ok" })
+        })
     }
 
     countTeachers = (req: express.Request, resp: express.Response) => {
@@ -69,10 +88,10 @@ export class NastavnikController {
     getOceneNastavnika = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
 
-        OcenaModel.find({"kor_ime_nastavnika": username}, (err, ocene)=>{
-            if(err) console.log(err)
-            else{
-                if(ocene)
+        OcenaModel.find({ "kor_ime_nastavnika": username }, (err, ocene) => {
+            if (err) console.log(err)
+            else {
+                if (ocene)
                     resp.json(ocene)
                 else
                     resp.json(null)
@@ -81,25 +100,25 @@ export class NastavnikController {
     }
 
     getOcene = (req: express.Request, resp: express.Response) => {
-        OcenaModel.find({}, (err, ocene)=>{
-            if(err) console.log(err)
-            else{
-                if(ocene)
+        OcenaModel.find({}, (err, ocene) => {
+            if (err) console.log(err)
+            else {
+                if (ocene)
                     resp.json(ocene)
                 else
                     resp.json(null)
             }
         })
     }
-    
+
     editIme = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let name = req.body.name
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"ime": name}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "ime": name } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -107,11 +126,11 @@ export class NastavnikController {
     editPrezime = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let surname = req.body.surname
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"prezime": surname}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "prezime": surname } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -119,11 +138,11 @@ export class NastavnikController {
     editAdresu = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let address = req.body.address
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"adresa": address}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "adresa": address } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -131,11 +150,11 @@ export class NastavnikController {
     editMejl = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let email = req.body.email
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"mejl": email}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "mejl": email } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -143,11 +162,11 @@ export class NastavnikController {
     editKontakt = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let phone = req.body.phone
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"kontakt": phone}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "kontakt": phone } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -155,11 +174,11 @@ export class NastavnikController {
     editUzrast = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let uzrast = req.body.uzrast
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"uzrast": uzrast}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "uzrast": uzrast } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
@@ -167,23 +186,33 @@ export class NastavnikController {
     editPredmeti = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let predmeti = req.body.predmeti
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"predmeti": predmeti}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "predmeti": predmeti } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
             }
         })
     }
-    
+
     editSlika = (req: express.Request, resp: express.Response) => {
         let username = req.body.username
         let slika = req.body.slika
-        
-        NastavnikModel.updateOne({"kor_ime": username}, {$set: {"slika": slika}}, (err, res)=>{
-            if(err) console.log(err)
-            else{
-                   resp.json(res)
+
+        NastavnikModel.updateOne({ "kor_ime": username }, { $set: { "slika": slika } }, (err, res) => {
+            if (err) console.log(err)
+            else {
+                resp.json(res)
+            }
+        })
+    }
+
+    getSveZahteve = (req: express.Request, resp: express.Response) => {
+
+        ZahtevZaRegistracijuModel.find({}, (err, zahtevi) => {
+            if (err) console.log(err)
+            else {
+                resp.json(zahtevi)
             }
         })
     }

@@ -1,11 +1,9 @@
 import { Predmet } from "./predmet";
 import { Uzrast } from "./uzrast";
 
-export class Korisnik{
+export class Korisnik {
     kor_ime: string;
     lozinka: string;
-    pitanje: string;
-    odgovor: string;
     ime: string;
     prezime: string;
     pol: string;
@@ -16,18 +14,23 @@ export class Korisnik{
     slika: string;
 }
 
-export class Admin extends Korisnik{
+export class Admin extends Korisnik {
 
 }
 
-export class Nastavnik extends Korisnik{
-    CV: string;
+export class Nastavnik extends Korisnik {
     predmeti: Array<Predmet>;
     uzrast: Array<Uzrast>;
     odgovorZaSajt: string;
 }
 
-export class Ucenik extends Korisnik{
+export class Ucenik extends Korisnik {
     tipSkole: string;
     razred: string;
+}
+
+export class ZahtevZaRegistraciju extends Nastavnik {
+    CV: File;
+    CVbase64: string;
+    status: string;
 }

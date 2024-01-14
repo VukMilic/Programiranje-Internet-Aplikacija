@@ -44,6 +44,10 @@ th {
     height: 50px;
 }
 
+ul{
+    color: brown;
+}
+
 mat-toolbar{
     display: flex;
     align-items: center;
@@ -69,8 +73,8 @@ mat-sidenav-container{
 
 .content{
     background-image: url('/assets/background_ucenik.jpeg');
-    height: calc(100vh);
-    margin: 20px;
+    height: fit-content;
+    margin: 40px;
     margin-left: 30;
     display: flex;
     align-items: center;

@@ -4,7 +4,7 @@ import { Nastavnik, Ucenik } from '../models/korisnik';
 import { NastavnikService } from '../servers/nastavnik.service';
 import { Uzrast } from '../models/uzrast';
 import { Predmet } from '../models/predmet';
-import { Cas, CasSaUcenikom, ZahtevZaCas, ZahtevZaCasSaUcenikom } from '../models/cas';
+import { Cas, CasSaNastavnikom, CasSaUcenikom, ZahtevZaCas, ZahtevZaCasSaUcenikom } from '../models/cas';
 import { UcenikService } from '../servers/ucenik.service';
 
 @Component({
@@ -49,6 +49,13 @@ export class NastavnikComponent implements OnInit {
   uzrastiNizStringova: string[];
   predmetiNizStringova: string[];
 
+  uceniciNastavnika: Ucenik[] = [];
+  casoviUcenika: Cas[] = [];
+  casoviUcenikaDosije: CasSaNastavnikom[] = [];
+  setPredmetaDosije: Set<string> = new Set;
+  setDatumaDosije: Set<string> = new Set;
+  mapaPredmetDatumDosije: Map<string, Set<string>> = new Map;
+
   casoviNastavnika: Cas[] = [];
   // ovo sledece su casovi koji se prikazuju (sortirani i skraceni)
   casoviNastavnikaSaUcenikom: CasSaUcenikom[] = [];
@@ -90,6 +97,23 @@ export class NastavnikComponent implements OnInit {
     this.casoviNastavnika = this.casoviNastavnikaSaUcenikom;
 
     this.casoviNastavnikaSaUcenikom.splice(5);
+  }
+
+  toggleUcenici() {
+    this.stavkaMenija = 2;
+    this.dosijeFlag = false;
+
+    this.uceniciNastavnika.forEach(un => {
+      this.nasser.getCasoviUcenikaINastavnika(this.trenNastavnik.kor_ime, un.kor_ime).subscribe((c: Cas[]) => {
+        if (c != null) {
+          c.forEach(cas => {
+            if (cas.status == "finished")
+              this.casoviUcenika.push(cas);
+          });
+          this.casoviUcenika.sort(this.sortDatumi);
+        }
+      })
+    });
   }
 
   imgSelected(event: any) {
@@ -278,6 +302,8 @@ export class NastavnikComponent implements OnInit {
             }
           })
         });
+
+        this.getUceniciNastavnika(c);
       } else {
         this.casoviMessage = "There are no classes for this Teacher";
       }
@@ -559,6 +585,98 @@ export class NastavnikComponent implements OnInit {
     })
   }
 
+  // Dosijei ucenika
+
+  getUceniciNastavnika(casovi) {
+
+    let setUcenika: Set<String> = new Set;
+
+    casovi.forEach(cas => {
+      if (cas.status == "finished") {
+        setUcenika.add(cas.kor_ime_ucenika);
+      }
+    });
+
+    // nakon prosle for petlje imas set ucenika kojima je ovaj nastavnik predavao casove
+    // sada ubaci sve te ucenike da bi uzimao njihove dosijee
+
+    let sviUcenici: Ucenik[] = JSON.parse(localStorage.getItem("sviUcenici"));
+    sviUcenici.forEach(ucenik => {
+      // ako u onom setu postoji korisnicko ime tog ucenika ubaci ga u niz
+      if (setUcenika.has(ucenik.kor_ime)) {
+        // ubaci ga u glavni niz ucenika kojima je nastavnik predavao
+        this.uceniciNastavnika.push(ucenik);
+
+      }
+    });
+
+  }
+
+  dosijeFlag: boolean = false;
+  dosijeUcenik: Ucenik;
+
+  dosije(kor_ime) {
+    this.casoviUcenikaDosije = [];
+    this.setPredmetaDosije = new Set;
+    this.setDatumaDosije = new Set;
+    this.mapaPredmetDatumDosije = new Map;
+    this.dosijeFlag = true;
+
+    // uhvati ucenika za koga je kliknut dosije
+    for (let i = 0; i < this.uceniciNastavnika.length; i++) {
+      if (kor_ime == this.uceniciNastavnika[i].kor_ime) {
+        this.dosijeUcenik = this.uceniciNastavnika[i];
+        break;
+      }
+    }
+
+    this.casoviUcenika.forEach(cu => {
+      if (kor_ime == cu.kor_ime_ucenika) {
+        let sati;
+        let datumDo = new Date(cu.datum_i_vreme);
+        if (cu.trajanje == "2 hours") {
+          sati = 2;
+        } else {
+          sati = 1;
+        }
+        datumDo.setHours(datumDo.getHours() + sati);
+        let data: CasSaNastavnikom = {
+          _id: cu._id,
+          kor_ime_nastavnika: cu.kor_ime_nastavnika,
+          kor_ime_ucenika: cu.kor_ime_ucenika,
+          naziv_predmeta: cu.naziv_predmeta,
+          datum_i_vreme: cu.datum_i_vreme,
+          deskripcija: cu.deskripcija,
+          status: cu.status,
+          trajanje: cu.trajanje,
+          nastavnik: null,
+          datum: cu.datum_i_vreme.toString().substring(0, 10),
+          vremeOd: cu.datum_i_vreme.toString().substring(11, 16),
+          vremeDo: datumDo.toString().substring(16, 21)
+        }
+        this.casoviUcenikaDosije.push(data);
+      }
+    });
+    this.casoviUcenikaDosije.sort(this.sortDatumi)
+    // casoviUcenikaDosije - ovde imamo casove ucenika za koga je kliknuto dugme dosije
+
+    this.casoviUcenikaDosije.forEach(cud => {
+      this.setPredmetaDosije.add(cud.naziv_predmeta);
+    });
+
+    this.setPredmetaDosije.forEach(setpd => {
+      this.setDatumaDosije = new Set;
+      this.casoviUcenikaDosije.forEach(cud => {
+        if (setpd == cud.naziv_predmeta) {
+          this.setDatumaDosije.add(cud.datum);
+        }
+      });
+      if (this.setDatumaDosije.size > 0) {
+        this.mapaPredmetDatumDosije[setpd] = this.setDatumaDosije;
+      }
+    });
+
+  }
 
   // LOGOUT
 

@@ -40,7 +40,6 @@ export class RegisterComponent implements OnInit {
   razred: string;
 
   // nastavnik dodatna polja
-  selectedCV: any;
   predmeti: Array<Predmet> = [];
   predmetiVanListe: string;
   predmetiNizStringova: string[];
@@ -50,22 +49,26 @@ export class RegisterComponent implements OnInit {
 
   message: string
 
-  selectedImage: any
+  selectedImage: any = new Image();
+  selectedCV: File;
+  cvsize: number;
 
   imgSelected(event: any) {
     let fr = new FileReader()
     fr.readAsDataURL(event.target.files[0])
     fr.onloadend = (event) => {
-      this.selectedImage = fr.result;
+      this.selectedImage.src = fr.result as string;
     }
   }
 
   cvSelected(event: any) {
     let fr = new FileReader()
     fr.readAsDataURL(event.target.files[0])
-    fr.onloadend = (event) => {
-      this.selectedCV = fr.result;
-    }
+    this.cvsize = event.target.files[0].size;
+    this.selectedCV = event.target.files[0];
+    // fr.onloadend = (event) => {
+    //   this.selectedCV = fr.result;
+    // }
   }
 
   registerAsStudent() {
@@ -114,8 +117,23 @@ export class RegisterComponent implements OnInit {
 
       const regexPattern = new RegExp('^((?=.*[A-Z])(?=.*[a-z].*[a-z].*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])[a-zA-Z](.{5,9}))$')
 
-      if (this.selectedImage == null) {
+      if (this.selectedImage.width == 0 && this.selectedImage.height == 0) {
         this.selectedImage = '/assets/profilna_default.png'
+      } else {
+        if(this.selectedImage.width < 100 || this.selectedImage.width > 300 || this.selectedImage.height < 100 || this.selectedImage.height > 300){
+          this.message = "Image width and height must be between 100px and 300px"
+          return; 
+        }
+      }
+
+      if(this.selectedCV == null ){
+        this.message = "You need to upload your CV"
+        return;
+      } else {
+        if(this.cvsize > 3145728){
+          this.message = "Size of your CV file must be under 3 MB"
+          return;
+        }
       }
 
       if (this.username == null) {
@@ -151,11 +169,18 @@ export class RegisterComponent implements OnInit {
               this.korser.findByEmail(this.email).subscribe((res2) => {
 
                 if (res2["message"] == "ok") {
-                  this.nasser.register(this.username, this.password, this.question, this.answer, this.firstname, this.lastname, this.sex, this.address, this.phone, this.email, this.selectedImage, this.selectedCV, this.predmeti, this.uzrasti, this.odgovorZaSajt).subscribe((res3) => {
+                  this.nasser.register(this.username, this.password, this.question, this.answer, this.firstname, this.lastname, this.sex, this.address, this.phone, this.email, this.selectedImage.src, this.predmeti, this.uzrasti, this.odgovorZaSajt).subscribe((res3) => {
                     if (res3["message"] == "ok") {
-                      this.message = "Teacher added"
-                      alert(this.message)
-                      this.router.navigate(['/'])
+
+                      this.nasser.sendCV(this.username, this.selectedCV).subscribe((res4)=>{
+                        if (res4["message"] == "ok"){
+                          this.message = "Teacher added"
+                          alert(this.message)
+                          this.router.navigate(['/'])    
+                        } else {
+                          this.message = "Unable to upload CV"
+                        }
+                      })
                     } else {
                       this.message = "ERROR"
                     }
@@ -187,6 +212,11 @@ export class RegisterComponent implements OnInit {
 
       if (this.selectedImage == null) {
         this.selectedImage = '/assets/profilna_default.png'
+      } else {
+        if(this.selectedImage.width < 100 || this.selectedImage.width > 300 || this.selectedImage.height < 100 || this.selectedImage.height > 300){
+          this.message = "Image width and height must be between 100px and 300px"
+          return; 
+        }
       }
 
       if (this.username == null) {
@@ -222,7 +252,7 @@ export class RegisterComponent implements OnInit {
               this.korser.findByEmail(this.email).subscribe((res2) => {
 
                 if (res2["message"] == "ok") {
-                  this.ucenser.register(this.username, this.password, this.question, this.answer, this.firstname, this.lastname, this.sex, this.address, this.phone, this.email, this.selectedImage, this.tipSkole, this.razred).subscribe((res3) => {
+                  this.ucenser.register(this.username, this.password, this.question, this.answer, this.firstname, this.lastname, this.sex, this.address, this.phone, this.email, this.selectedImage.src, this.tipSkole, this.razred).subscribe((res3) => {
                     if (res3["message"] == "ok") {
                       this.message = "Student added"
                       alert(this.message)

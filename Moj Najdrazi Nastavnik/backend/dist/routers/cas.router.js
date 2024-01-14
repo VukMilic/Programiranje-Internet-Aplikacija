@@ -13,5 +13,7 @@ casRouter.route('/getZahteviZaCasNastavnika').post((req, res) => new cas_control
 casRouter.route('/setAccept').post((req, res) => new cas_controller_1.CasController().setAccept(req, res));
 casRouter.route('/setDecline').post((req, res) => new cas_controller_1.CasController().setDecline(req, res));
 casRouter.route('/setCasoviStatus').post((req, res) => new cas_controller_1.CasController().setCasoviStatus(req, res));
+casRouter.route('/getCasoviUcenika').post((req, res) => new cas_controller_1.CasController().getCasoviUcenika(req, res));
+casRouter.route('/getCasoviUcenikaINastavnika').post((req, res) => new cas_controller_1.CasController().getCasoviUcenikaINastavnika(req, res));
 exports.default = casRouter;
 //# sourceMappingURL=cas.router.js.map

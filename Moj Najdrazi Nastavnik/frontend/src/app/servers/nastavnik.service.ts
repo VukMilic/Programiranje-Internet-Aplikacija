@@ -8,7 +8,7 @@ export class NastavnikService {
 
   constructor(private http: HttpClient) { }
 
-  register(username, password, question, answer, firstname, lastname, sex, address, phone, email, selectedImage, selectedCV, predmeti, uzrasti, odgovorZaSajt){
+  register(username, password, question, answer, firstname, lastname, sex, address, phone, email, selectedImage, predmeti, uzrasti, odgovorZaSajt){
     
     let data = {
       username: username,
@@ -22,13 +22,21 @@ export class NastavnikService {
       phone: phone,
       email: email,
       selectedImage: selectedImage,
-      selectedCV: selectedCV,
       predmeti: predmeti,
       uzrasti: uzrasti,
       odgovorZaSajt: odgovorZaSajt
     }
 
     return this.http.post('http://127.0.0.1:4000/nastavnici/register', data)
+  }
+
+  sendCV(username, selectedCV){
+    
+    let formdata: FormData = new FormData();
+    formdata.append("selectedCV", selectedCV, selectedCV.name);
+    formdata.append("username", username);
+
+    return this.http.post('http://127.0.0.1:4000/nastavnici/sendCV', formdata)
   }
 
   countTeachers(){
@@ -179,4 +187,12 @@ export class NastavnikService {
     return this.http.post('http://127.0.0.1:4000/casovi/setCasoviStatus', data)
   }
 
+  getCasoviUcenikaINastavnika(usernameTeacher, usernameStudent){
+    let data = {
+      usernameTeacher: usernameTeacher,
+      usernameStudent: usernameStudent
+    }
+
+    return this.http.post('http://127.0.0.1:4000/casovi/getCasoviUcenikaINastavnika', data)
+  }
 }

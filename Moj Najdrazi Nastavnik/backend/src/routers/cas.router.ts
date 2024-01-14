@@ -31,4 +31,12 @@ casRouter.route('/setCasoviStatus').post(
     (req,res) => new CasController().setCasoviStatus(req,res)
 )
 
+casRouter.route('/getCasoviUcenika').post(
+    (req,res) => new CasController().getCasoviUcenika(req,res)
+)
+
+casRouter.route('/getCasoviUcenikaINastavnika').post(
+    (req,res) => new CasController().getCasoviUcenikaINastavnika(req,res)
+)
+
 export default casRouter

@@ -5,7 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NastavnikController = void 0;
 const nastavnik_1 = __importDefault(require("../models/nastavnik"));
+const zahtev_za_registraciju_1 = __importDefault(require("../models/zahtev_za_registraciju"));
 const ocena_1 = __importDefault(require("../models/ocena"));
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 class NastavnikController {
     constructor() {
         this.register = (req, resp) => {
@@ -13,7 +16,7 @@ class NastavnikController {
             const saltRounds = 10;
             bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
                 // Store hash in your password DB.
-                let noviNastavnik = new nastavnik_1.default({
+                let noviZahtev = new zahtev_za_registraciju_1.default({
                     kor_ime: req.body.username,
                     lozinka: hash,
                     pitanje: req.body.question,
@@ -26,17 +29,29 @@ class NastavnikController {
                     mejl: req.body.email,
                     tip: "nastavnik",
                     slika: req.body.selectedImage,
-                    CV: req.body.selectedCV,
                     predmeti: req.body.predmeti,
                     uzrast: req.body.uzrasti,
-                    odgovorZaSajt: req.body.odgovorZaSajt
+                    odgovorZaSajt: req.body.odgovorZaSajt,
+                    status: "waiting"
                 });
-                noviNastavnik.save((err, res) => {
+                console.log("usao si ovde");
+                noviZahtev.save((err, res) => {
                     if (err)
                         console.log(err);
                     else
                         resp.json({ "message": "ok" });
                 });
+            });
+        };
+        this.sendCV = (req, resp) => {
+            let username = req.body.username;
+            let selectedCV = req.file;
+            console.log("Usao ovde; username = " + username + "; " + "selectedCV.name" + selectedCV.filename);
+            zahtev_za_registraciju_1.default.updateOne({ "kor_ime": username }, { $push: { "CV": selectedCV } }, (err, res) => {
+                if (err)
+                    console.log(err);
+                else
+                    resp.json({ "message": "ok" });
             });
         };
         this.countTeachers = (req, resp) => {
@@ -176,6 +191,15 @@ class NastavnikController {
                     console.log(err);
                 else {
                     resp.json(res);
+                }
+            });
+        };
+        this.getSveZahteve = (req, resp) => {
+            zahtev_za_registraciju_1.default.find({}, (err, zahtevi) => {
+                if (err)
+                    console.log(err);
+                else {
+                    resp.json(zahtevi);
                 }
             });
         };

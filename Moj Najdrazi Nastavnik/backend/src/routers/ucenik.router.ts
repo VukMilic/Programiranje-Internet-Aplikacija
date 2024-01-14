@@ -46,4 +46,9 @@ ucenRouter.route('/editRazred').post(
 ucenRouter.route('/getUcenikByUsername').post(
     (req,res) => new UcenikController().getUcenikByUsername(req,res)
 )
+
+ucenRouter.route('/getUcenici').get(
+    (req,res) => new UcenikController().getUcenici(req,res)
+)
+
 export default ucenRouter

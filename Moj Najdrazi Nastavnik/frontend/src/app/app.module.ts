@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { NastavnikDetaljiComponent } from './nastavnik-detalji/nastavnik-detalji.component';
 
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 @NgModule({
   declarations: [
     AppComponent,
